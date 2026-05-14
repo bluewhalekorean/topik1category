@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOPIK I 상황별 단어장</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--sw:268px;--hh:52px}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic','Segoe UI',sans-serif;background:#eef2f7;color:#222}
+
+/* Header */
+#hdr{position:fixed;top:0;left:0;right:0;height:var(--hh);
+  background:linear-gradient(135deg,#1a3a5c,#1e4d7b);color:#fff;
+  display:flex;align-items:center;padding:0 16px;z-index:300;gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#hbg{font-size:1.4rem;cursor:pointer;display:none;background:none;border:none;color:#fff}
+.hdrtxt .sub{font-size:.68rem;opacity:.65}
+.hdrtxt h1{font-size:.98rem;font-weight:700}
+#srch{margin-left:auto;padding:6px 14px;border-radius:20px;border:none;
+  background:rgba(255,255,255,.15);color:#fff;font-size:.82rem;width:180px;outline:none}
+#srch::placeholder{color:rgba(255,255,255,.5)}
+
+/* Sidebar */
+#sb{position:fixed;top:var(--hh);left:0;width:var(--sw);
+  height:calc(100vh - var(--hh));overflow-y:auto;
+  background:#fff;border-right:1px solid #dce4ef;z-index:200}
+#sb::-webkit-scrollbar{width:4px}
+#sb::-webkit-scrollbar-thumb{background:#cdd5e0;border-radius:2px}
+.ci{padding:9px 14px 9px 16px;cursor:pointer;border-left:4px solid transparent;
+  display:flex;align-items:flex-start;gap:9px;transition:.12s}
+.ci:hover{background:#f4f7fc}
+.ci.active{background:#eef3ff;border-left-color:var(--cc)}
+.cn{font-size:.66rem;font-weight:700;color:#aaa;min-width:20px;padding-top:2px}
+.cl{flex:1}
+.cko{font-size:.84rem;font-weight:700;color:#1a3a5c}
+.cen{font-size:.68rem;color:#888;margin-top:1px}
+.cnt{font-size:.68rem;color:#aaa;white-space:nowrap;padding-top:2px}
+
+/* Main */
+#main{margin-left:var(--sw);margin-top:var(--hh);padding:22px;min-height:calc(100vh - var(--hh))}
+
+/* Category header */
+.ch{border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:18px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.ch .tko{font-size:1.3rem;font-weight:800}
+.ch .ten{font-size:.84rem;opacity:.85;margin-top:2px}
+.ch .wc{font-size:.78rem;opacity:.75;text-align:right;line-height:1.6}
+
+/* Mode bar */
+.modebar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.mbtn{padding:7px 18px;border-radius:20px;border:2px solid transparent;
+  cursor:pointer;font-size:.84rem;font-weight:700;
+  background:#fff;color:#667;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.mbtn:hover{background:#f0f4ff}
+.mbtn.active{color:#fff;border-color:transparent}
+
+/* ── LIST VIEW ─────────────────────────────────────── */
+.blk{margin-bottom:20px;border-radius:10px;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);background:#fff}
+.bh{display:flex;align-items:center;justify-content:space-between;
+  padding:7px 16px;color:#fff;font-weight:700;font-size:.82rem}
+.fbt{padding:3px 12px;border-radius:12px;border:none;cursor:pointer;
+  background:rgba(255,255,255,.25);color:#fff;font-size:.75rem;font-weight:700}
+.fbt:hover{background:rgba(255,255,255,.4)}
+.wt{width:100%;border-collapse:collapse}
+.wt th{padding:7px 11px;font-size:.78rem;font-weight:700;color:#667;
+  background:#f8fafc;border-bottom:2px solid #e6ecf5;text-align:left}
+.wt th:first-child,.wt td:first-child{text-align:center;width:44px}
+.wt td{padding:8px 11px;border-bottom:1px solid #edf1f8;font-size:.88rem;vertical-align:top}
+.wt tr:last-child td{border-bottom:none}
+.wt tr:hover td{background:#f6f9ff}
+.kc{font-weight:700;color:#1a3a5c;font-size:.97rem}
+.ec{color:#444}
+.sc{font-size:.78rem;color:#666;margin-top:3px;font-style:italic}
+.tb{background:none;border:none;cursor:pointer;font-size:.95rem;
+  opacity:.5;padding:3px 5px;border-radius:5px;transition:.15s}
+.tb:hover{opacity:1;background:#f0f4ff}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+.spk{opacity:1;animation:pulse .5s infinite}
+
+/* ── CARD VIEW ─────────────────────────────────────── */
+#kv{max-width:560px;margin:0 auto}
+.sf-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sfbtn{padding:5px 14px;border-radius:16px;border:none;cursor:pointer;
+  font-size:.78rem;font-weight:700;background:#e8edf5;color:#555;transition:.15s}
+.sfbtn:hover{background:#d0d8e8}
+.sfbtn.active{color:#fff}
+.dir-bar{display:flex;gap:6px;margin-bottom:16px}
+.dbtn{padding:5px 16px;border-radius:16px;border:2px solid #dde3ef;
+  cursor:pointer;font-size:.8rem;font-weight:700;background:#fff;color:#667;transition:.15s}
+.dbtn.active{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+
+/* progress bar */
+.pgbar{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.pgtrack{flex:1;height:8px;background:#e4ecf7;border-radius:4px;overflow:hidden}
+.pgfill{height:100%;border-radius:4px;transition:width .3s}
+.pgnum{font-size:.8rem;color:#888;min-width:52px;text-align:right}
+
+/* card itself */
+.card-wrap{perspective:1000px;margin-bottom:20px}
+.card{background:#fff;border-radius:16px;min-height:220px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;padding:28px 24px;text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);transition:box-shadow .15s;
+  user-select:none;position:relative}
+.card:hover{box-shadow:0 6px 28px rgba(0,0,0,.18)}
+.card-front,.card-back{width:100%}
+.cf-ko{font-size:1.8rem;font-weight:800;color:#1a3a5c;margin-bottom:10px}
+.cf-hint{font-size:.75rem;color:#ccc;margin-top:8px}
+.cb-en{font-size:1.3rem;font-weight:700;color:#1a3a5c;margin-bottom:10px}
+.cb-sen{font-size:.92rem;color:#555;margin-bottom:10px;font-style:italic}
+.card-tts-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.ctts{padding:5px 14px;border-radius:12px;border:none;cursor:pointer;
+  font-size:.8rem;font-weight:600;background:#f0f4ff;color:#1a3a5c;transition:.15s}
+.ctts:hover{background:#dce4ff}
+.card-nav{display:flex;align-items:center;justify-content:center;gap:16px}
+.cnav{padding:8px 24px;border-radius:20px;border:none;cursor:pointer;
+  font-weight:700;font-size:.9rem;background:#fff;color:#1a3a5c;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);transition:.15s}
+.cnav:hover{background:#eef3ff}
+.cflipbtn{padding:8px 20px;border-radius:20px;border:none;cursor:pointer;
+  font-weight:700;font-size:.85rem;color:#fff;transition:.15s}
+
+/* ── QUIZ VIEW ─────────────────────────────────────── */
+#qv{max-width:560px;margin:0 auto}
+.qhdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.qscore{font-size:.92rem;font-weight:700;color:#1a3a5c;background:#eef3ff;
+  padding:6px 14px;border-radius:20px}
+.qreset{padding:5px 14px;border-radius:16px;border:none;cursor:pointer;
+  font-size:.78rem;font-weight:700;background:#f0f0f0;color:#666;transition:.15s}
+.qreset:hover{background:#e0e0e0}
+.qdir{display:flex;gap:6px;margin-bottom:16px}
+.qdbtn{padding:5px 16px;border-radius:16px;border:2px solid #dde3ef;
+  cursor:pointer;font-size:.8rem;font-weight:700;background:#fff;color:#667}
+.qdbtk.active,.qdbtk:focus{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.qcard{background:#fff;border-radius:14px;padding:28px 24px;text-align:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.1);margin-bottom:18px;min-height:100px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.qword{font-size:1.6rem;font-weight:800;color:#1a3a5c;margin-bottom:6px}
+.qpron{font-size:.82rem;color:#aaa}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.opt{padding:12px 10px;border-radius:10px;border:2px solid #dde3ef;
+  cursor:pointer;font-size:.88rem;font-weight:600;background:#fff;
+  color:#333;text-align:left;transition:.15s;line-height:1.4}
+.opt:hover:not(:disabled){background:#f0f5ff;border-color:#a0b4d4}
+.opt.correct{background:#e8f5e9;border-color:#4caf50;color:#2e7d32}
+.opt.wrong{background:#fce4ec;border-color:#e91e63;color:#b71c1c}
+.opt:disabled{cursor:default}
+.qnext{display:none;width:100%;padding:11px;border-radius:10px;border:none;
+  cursor:pointer;font-size:.9rem;font-weight:700;
+  background:#1a3a5c;color:#fff;transition:.15s}
+.qnext:hover{background:#1e4d7b}
+.qprogbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+
+/* ── FLASHCARD MODAL ───────────────────────────────── */
+#fco{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:600;align-items:center;justify-content:center}
+#fco.on{display:flex}
+#fcb{background:#fff;border-radius:18px;width:440px;max-width:94vw;
+  padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative}
+#fcc{position:absolute;top:12px;right:16px;font-size:1.3rem;
+  cursor:pointer;color:#aaa;background:none;border:none}
+#fct{font-size:.72rem;font-weight:700;color:#aaa;text-align:center;
+  margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase}
+#fcd{background:#f7f9fc;border-radius:14px;min-height:180px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;padding:24px;border:2px solid #e4ecf7;user-select:none;
+  transition:background .15s;text-align:center}
+#fcd:hover{background:#eef2ff}
+#fcf{font-size:1.6rem;font-weight:800;color:#1a3a5c}
+#fcen{font-size:1.15rem;font-weight:700;color:#1a3a5c;display:none;margin-bottom:6px}
+#fcsen{font-size:.9rem;color:#555;display:none;margin-top:4px;font-style:italic}
+#fch{font-size:.72rem;color:#ccc;margin-top:10px}
+.fcn{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px}
+.fnb{padding:7px 20px;border-radius:20px;border:none;cursor:pointer;
+  font-weight:700;font-size:.85rem;background:#e8edf5;color:#555}
+.fnb:hover{background:#d0d8e8}
+#fck{font-size:.85rem;color:#aaa;min-width:56px;text-align:center}
+.fcbtns{display:flex;gap:8px;margin-top:12px}
+.fcbt{flex:1;padding:8px;border-radius:9px;border:none;cursor:pointer;
+  font-size:.82rem;font-weight:700;background:#e8edf5;color:#555}
+.fcbt:hover{background:#d0d8e8}
+
+/* Welcome */
+#wel{text-align:center;padding:70px 20px;color:#667}
+#wel h2{font-size:1.55rem;color:#1a3a5c;margin-bottom:12px}
+#wel p{line-height:2;font-size:.93rem}
+
+/* Search */
+#sv{display:none}
+.stag{display:inline-block;padding:2px 9px;border-radius:10px;
+  font-size:.7rem;color:#fff;font-weight:700;white-space:nowrap}
+
+/* Mobile */
+@media(max-width:700px){
+  #hbg{display:block}
+  #sb{transform:translateX(-100%);transition:transform .25s}
+  #sb.open{transform:translateX(0)}
+  #main{margin-left:0;padding:12px}
+  #srch{width:120px}
+  .qopts{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <button id="hbg" onclick="toggleSB()">☰</button>
+  <div class="hdrtxt">
+    <div class="sub">TOPIK I · 1,671단어 · 20 Categories</div>
+    <h1>상황별 단어장 · Vocabulary by Situation</h1>
+  </div>
+  <input id="srch" type="text" placeholder="🔍 검색..." oninput="doSearch(this.value)">
+</div>
+
+<div id="sb"><div id="clist"></div></div>
+
+<div id="main">
+  <div id="wel">
+    <h2>📚 TOPIK I 상황별 단어장</h2>
+    <p>총 <strong>1,671단어</strong>를 <strong>20가지 상황별 카테고리</strong>로 구성했습니다.<br>
+    Organized 1,671 words into 20 real-life situational categories.<br><br>
+    ← 왼쪽에서 카테고리를 선택하세요<br>
+    <em style="font-size:.85rem">📋 목록 · 🃏 카드 · ❓ 퀴즈 세 가지 학습 모드를 제공합니다</em></p>
+  </div>
+
+  <div id="cv" style="display:none">
+    <div id="cat-hdr" class="ch"></div>
+    <div class="modebar">
+      <button class="mbtn active" id="mb-list" onclick="setMode('list')">📋 목록 보기</button>
+      <button class="mbtn" id="mb-card" onclick="setMode('card')">🃏 카드 보기</button>
+      <button class="mbtn" id="mb-quiz" onclick="setMode('quiz')">❓ 퀴즈</button>
+    </div>
+    <div id="lv"></div>
+    <div id="kv" style="display:none"></div>
+    <div id="qv" style="display:none"></div>
+  </div>
+
+  <div id="sv">
+    <h2 style="margin-bottom:14px;color:#1a3a5c">🔍 검색 결과</h2>
+    <div id="so"></div>
+  </div>
+</div>
+
+<!-- Flashcard modal -->
+<div id="fco" onclick="fcoOut(event)">
+  <div id="fcb">
+    <button id="fcc" onclick="closeFC()">✕</button>
+    <div id="fct"></div>
+    <div id="fcd" onclick="fcFlip()">
+      <div id="fcf"></div>
+      <div id="fcen"></div>
+      <div id="fcsen"></div>
+      <div id="fch">탭하여 뒤집기 · tap to flip</div>
+    </div>
+    <div class="fcn">
+      <button class="fnb" onclick="fcmv(-1)">← 이전</button>
+      <span id="fck"></span>
+      <button class="fnb" onclick="fcmv(1)">다음 →</button>
+    </div>
+    <div class="fcbtns">
+      <button class="fcbt" onclick="fcSpeak('k')">🔊 단어</button>
+      <button class="fcbt" onclick="fcSpeak('s')">📢 예문</button>
+      <button class="fcbt" onclick="fcShuffle()">🔀 섞기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA=[{"id":1,"ko":"인사 & 소개","en":"Greetings & Introductions","color":"#4472C4","short":"Greetings","words":[{"no":1,"k":"감사드립니다","e":"thank you","s":"저는 감사드립여요."},{"no":2,"k":"감사하다","e":"thank, appreciate","s":"도와줘서 감사해요."},{"no":3,"k":"감사합니다","e":"thank you","s":"저는 감사합여요."},{"no":4,"k":"계시다","e":"be, exist (honorific form)","s":"이것이 계여요."},{"no":5,"k":"고마웠습니다","e":"Thank you (past tense)","s":"저는 고마웠습여요."},{"no":6,"k":"고맙다","e":"thank","s":"저는 고맙아요."},{"no":7,"k":"고맙습니다","e":"Thank you","s":"저는 고맙습여요."},{"no":8,"k":"괜찮다","e":"be okay","s":"이것이 괜찮아요."},{"no":9,"k":"괜찮습니다","e":"It's fine.","s":"저는 괜찮습여요."},{"no":10,"k":"그래","e":"Yes, Yeah","s":"저는 그래를 좋아해요."},{"no":11,"k":"그렇구나","e":"well, I see.","s":"아, 그렇구나. 이해했어요."},{"no":12,"k":"그렇다","e":"Yes, that's it.","s":"저는 그렇어요."},{"no":13,"k":"그렇습니다","e":"That's right.","s":"저는 그렇습여요."},{"no":14,"k":"글쎄요","e":"I do not know., well, I guess ~","s":"글쎄요 시간이 있어요."},{"no":15,"k":"네","e":"yes, 4","s":"저는 네를 좋아해요."},{"no":16,"k":"답장","e":"reply","s":"저는 답장을 좋아해요."},{"no":17,"k":"덕분","e":"thanks for, thanks to","s":"저는 덕분을 좋아해요."},{"no":18,"k":"만나다","e":"meet","s":"친구를 만나요."},{"no":19,"k":"말씀","e":"words, remarks","s":"저는 말씀을 좋아해요."},{"no":20,"k":"말씀하다","e":"talk","s":"저는 말씀해요."},{"no":21,"k":"맞습니다","e":"That's right.","s":"저는 맞습여요."},{"no":22,"k":"맞아요","e":"That's right.","s":"저는 맞아요를 좋아해요."},{"no":23,"k":"메시지","e":"message","s":"저는 메시지를 좋아해요."},{"no":24,"k":"모르겠습니다","e":"I don't know.","s":"저는 모르겠습여요."},{"no":25,"k":"모시다","e":"take you, serve you (honorific form)","s":"저는 모여요."},{"no":26,"k":"미안하다","e":"sorry","s":"저는 미안해요."},{"no":27,"k":"미안합니다","e":"I'm sorry.","s":"저는 미안합여요."},{"no":28,"k":"반갑다","e":"nice to meet, happy","s":"날씨가 반갑아요."},{"no":29,"k":"반갑습니다","e":"Nice to meet you.","s":"저는 반갑습여요."},{"no":30,"k":"봉투","e":"envelope","s":"저는 봉투를 좋아해요."},{"no":31,"k":"뵙다","e":"meet","s":"저는 뵈워요."},{"no":32,"k":"성함","e":"name","s":"저는 성함을 좋아해요."},{"no":33,"k":"소개","e":"introduction","s":"저는 소개를 좋아해요."},{"no":34,"k":"소개하다","e":"introduce","s":"친구를 소개해요."},{"no":35,"k":"소포","e":"parcel","s":"저는 소포를 좋아해요."},{"no":36,"k":"실례","e":"excuse","s":"저는 실례를 좋아해요."},{"no":37,"k":"실례하다","e":"be excused","s":"저는 실례해요."},{"no":38,"k":"아뇨","e":"no","s":"저는 아뇨를 좋아해요."},{"no":39,"k":"아니다","e":"no","s":"저는 아여요."},{"no":40,"k":"아니오","e":"no","s":"저는 아니오를 좋아해요."},{"no":41,"k":"아니요","e":"no","s":"저는 아니요를 좋아해요."},{"no":42,"k":"안녕하요","e":"hi, hello","s":""},{"no":43,"k":"안녕하십니까","e":"hello","s":"저는 안녕하십니까를 좋아해요."},{"no":44,"k":"알았습니다","e":"I understood.","s":"저는 알았습여요."},{"no":45,"k":"얘기하다","e":"talk","s":"저는 얘기해요."},{"no":46,"k":"어머","e":"oh, well","s":"저는 어머를 좋아해요."},{"no":47,"k":"연락처","e":"contact information","s":"저는 연락처를 좋아해요."},{"no":48,"k":"예","e":"yes","s":"저는 예를 좋아해요."},{"no":49,"k":"오래간만","e":"after a long time","s":"저는 오래간만을 좋아해요."},{"no":50,"k":"오래간만입니다","e":"Long time no see.","s":"이것이 오래간만입여요."},{"no":51,"k":"오랜만","e":"after a long time","s":"저는 오랜만을 좋아해요."},{"no":52,"k":"오랜만에","e":"after a long time","s":"저는 오랜만에를 좋아해요."},{"no":53,"k":"우표","e":"stamp","s":"저는 우표를 좋아해요."},{"no":54,"k":"응","e":"Yeah (answer)","s":"저는 응을 좋아해요."},{"no":55,"k":"이름","e":"name","s":"저는 이름을 좋아해요."},{"no":56,"k":"이메일","e":"e-mail","s":"저는 이메일을 좋아해요."},{"no":57,"k":"이야기하다","e":"talk","s":"저는 이야기해요."},{"no":58,"k":"인사","e":"greetings","s":"저는 인사를 좋아해요."},{"no":59,"k":"인사하다","e":"greet","s":"저는 인사해요."},{"no":60,"k":"잔치","e":"party, feast","s":"저는 잔치를 좋아해요."},{"no":61,"k":"전화","e":"telephone","s":"저는 전화를 좋아해요."},{"no":62,"k":"전화기","e":"telephone","s":"저는 전화기를 좋아해요."},{"no":63,"k":"전화번호","e":"phone number","s":"저는 전화번호를 좋아해요."},{"no":64,"k":"죄송하다","e":"sorry","s":"저는 죄송해요."},{"no":65,"k":"처음","e":"first, for the first time","s":"처음 만났을 때 인사했어요."},{"no":66,"k":"처음 뵙겠습니다","e":"Nice to meet you.","s":"저는 처음 뵙겠습여요."},{"no":67,"k":"축하","e":"celebration","s":"저는 축하를 좋아해요."},{"no":68,"k":"축하하다","e":"celebrate","s":"저는 축하해요."},{"no":69,"k":"축하합니다","e":"congratulations","s":"저는 축하합여요."},{"no":70,"k":"파티","e":"party","s":"저는 파티를 좋아해요."},{"no":71,"k":"편지","e":"letter","s":"저는 편지를 좋아해요."},{"no":72,"k":"핸드폰","e":"cell phone, mobile phone","s":"저는 핸드폰을 좋아해요."},{"no":73,"k":"행사","e":"event","s":"행사 시간이 있어요."},{"no":74,"k":"환영하다","e":"welcome","s":"저는 환영해요."},{"no":75,"k":"휴대전화","e":"cell phone, mobile phone","s":"저는 휴대전화를 좋아해요."}]},{"id":2,"ko":"가족 & 친척","en":"Family & Relatives","color":"#70AD47","short":"Family","words":[{"no":1,"k":"가요","e":"song","s":"제 가요가 있어요."},{"no":2,"k":"가족","e":"family","s":"제 가족이 있어요."},{"no":3,"k":"결혼","e":"marriage","s":"저는 결혼을 좋아해요."},{"no":4,"k":"결혼식","e":"wedding ceremony","s":"저는 결혼식을 좋아해요."},{"no":5,"k":"결혼하다","e":"get married","s":"내년에 결혼해요."},{"no":6,"k":"고모","e":"paternal aunt","s":"제 고모가 있어요."},{"no":7,"k":"고모부","e":"paternal uncle","s":"제 고모부가 있어요."},{"no":8,"k":"남녀","e":"men and women","s":"저는 남녀를 좋아해요."},{"no":9,"k":"남동생","e":"younger brother","s":"제 남동생이 있어요."},{"no":10,"k":"남편","e":"husband","s":"제 남편이 있어요."},{"no":11,"k":"누나","e":"sister (as seen from the younger brother)","s":"제 누나가 있어요."},{"no":12,"k":"닮다","e":"resemble","s":"저는 닮아요."},{"no":13,"k":"데이트","e":"date, dating","s":"저는 데이트를 좋아해요."},{"no":14,"k":"동생","e":"brother, sister","s":"제 동생이 있어요."},{"no":15,"k":"딸","e":"daughter","s":"제 딸이 있어요."},{"no":16,"k":"부모","e":"parents","s":"제 부모가 있어요."},{"no":17,"k":"부부","e":"couple, husband and wife, married couple","s":"제 부부가 있어요."},{"no":18,"k":"부인","e":"wife, Mrs.","s":"제 부인이 있어요."},{"no":19,"k":"분","e":"~ person(s), ~ minute(s)","s":"제 분이 있어요."},{"no":20,"k":"사촌","e":"cousin","s":"제 사촌이 있어요."},{"no":21,"k":"삼촌","e":"paternal uncle","s":"제 삼촌이 있어요."},{"no":22,"k":"아내","e":"wife","s":"제 아내가 있어요."},{"no":23,"k":"아들","e":"son","s":"제 아들이 있어요."},{"no":24,"k":"아버님","e":"father","s":"제 아버님이 있어요."},{"no":25,"k":"아버지","e":"father","s":"제 아버지가 있어요."},{"no":26,"k":"아빠","e":"dad","s":"저는 아빠를 좋아해요."},{"no":27,"k":"약속","e":"appointment, promise","s":"저는 약속을 좋아해요."},{"no":28,"k":"어머니","e":"mother","s":"제 어머니가 있어요."},{"no":29,"k":"어머님","e":"mother","s":"제 어머님이 있어요."},{"no":30,"k":"언니","e":"sister (as seen from the younger sister)","s":"제 언니가 있어요."},{"no":31,"k":"엄마","e":"mom","s":"저는 엄마를 좋아해요."},{"no":32,"k":"여동생","e":"younger sister","s":"제 여동생이 있어요."},{"no":33,"k":"오빠","e":"brother (as seen from the younger sister)","s":"제 오빠가 있어요."},{"no":34,"k":"외삼촌","e":"maternal uncle","s":"제 외삼촌이 있어요."},{"no":35,"k":"외숙모","e":"maternal aunt","s":"제 외숙모가 있어요."},{"no":36,"k":"외할머니","e":"maternal grandmother","s":"제 외할머니가 있어요."},{"no":37,"k":"외할아버지","e":"maternal grandfather","s":"제 외할아버지가 있어요."},{"no":38,"k":"웬일","e":"for some reason, What was it?","s":"제 웬일이 있어요."},{"no":39,"k":"이모","e":"maternal aunt","s":"제 이모가 있어요."},{"no":40,"k":"이모부","e":"maternal uncle","s":"제 이모부가 있어요."},{"no":41,"k":"작은아버지","e":"uncle","s":"제 작은아버지가 있어요."},{"no":42,"k":"작은어머니","e":"aunt","s":"제 작은어머니가 있어요."},{"no":43,"k":"조카","e":"nephew","s":"제 조카가 있어요."},{"no":44,"k":"철","e":"iron, season","s":"제 철이 있어요."},{"no":45,"k":"친척","e":"relative","s":"저는 친척을 좋아해요."},{"no":46,"k":"큰아버지","e":"uncle","s":"제 큰아버지가 있어요."},{"no":47,"k":"큰어머니","e":"aunt","s":"제 큰어머니가 있어요."},{"no":48,"k":"태어나다","e":"be born","s":"이것이 태어나요."},{"no":49,"k":"할머니","e":"grandmother","s":"제 할머니가 있어요."},{"no":50,"k":"할아버지","e":"grandfather","s":"제 할아버지가 있어요."},{"no":51,"k":"형","e":"brother (as seen from the younger brother)","s":"제 형이 있어요."},{"no":52,"k":"형님","e":"big brother (honorific form)","s":"제 형님이 있어요."},{"no":53,"k":"형제","e":"sibling","s":"저는 형제를 좋아해요."}]},{"id":3,"ko":"사람 & 직업","en":"People & Occupations","color":"#ED7D31","short":"People","words":[{"no":1,"k":"가수","e":"singer","s":"저는 가수를 좋아해요."},{"no":2,"k":"간호사","e":"nurse","s":"제 간호사가 있어요."},{"no":3,"k":"개인","e":"individual","s":"저는 개인을 좋아해요."},{"no":4,"k":"경찰","e":"police","s":"저는 경찰을 먹어요."},{"no":5,"k":"경찰관","e":"police officer","s":"저는 경찰관에 가요."},{"no":6,"k":"경찰서","e":"police office","s":"저는 경찰서에 가요."},{"no":7,"k":"공무원","e":"public official","s":"제 공무원이 있어요."},{"no":8,"k":"교수","e":"professor","s":"제 교수가 있어요."},{"no":9,"k":"군인","e":"soldier, military personnel","s":"제 군인이 있어요."},{"no":10,"k":"기자","e":"reporter","s":"제 기자가 있어요."},{"no":11,"k":"남자","e":"man","s":"제 남자가 있어요."},{"no":12,"k":"남학생","e":"male student","s":"제 남학생이 있어요."},{"no":13,"k":"배우","e":"actor","s":"저는 배우를 좋아해요."},{"no":14,"k":"변호사","e":"lawyer","s":"저는 변호사를 좋아해요."},{"no":15,"k":"부장","e":"director","s":"저는 부장을 좋아해요."},{"no":16,"k":"사람","e":"person, man","s":"제 사람이 있어요."},{"no":17,"k":"사업가","e":"entrepreneur, businessman","s":"제 사업가가 있어요."},{"no":18,"k":"사원","e":"temple, employee","s":"저는 사원에 가요."},{"no":19,"k":"선배","e":"elder, senior","s":"제 선배가 있어요."},{"no":20,"k":"선생님","e":"teacher","s":"저는 선생님을 먹어요."},{"no":21,"k":"선수","e":"player","s":"저는 선수를 좋아해요."},{"no":22,"k":"소설가","e":"novelist","s":"저는 소설가를 좋아해요."},{"no":23,"k":"손님","e":"customer","s":"저는 손님을 좋아해요."},{"no":24,"k":"스타","e":"star","s":"저는 스타를 좋아해요."},{"no":25,"k":"시민","e":"citizen","s":"저는 시민을 좋아해요."},{"no":26,"k":"아가씨","e":"Miss, daughter","s":"제 아가씨가 있어요."},{"no":27,"k":"아기","e":"baby, toddler","s":"제 아기가 있어요."},{"no":28,"k":"아이","e":"child","s":"제 아이가 있어요."},{"no":29,"k":"아저씨","e":"uncle, mister","s":"제 아저씨가 있어요."},{"no":30,"k":"아주머니","e":"old lady, madame, aunt","s":"제 아주머니가 있어요."},{"no":31,"k":"아줌마","e":"old lady, madame, aunt","s":"제 아줌마가 있어요."},{"no":32,"k":"약사","e":"pharmacist","s":"저는 약사를 좋아해요."},{"no":33,"k":"어른","e":"adult","s":"제 어른이 있어요."},{"no":34,"k":"어린이","e":"child","s":"제 어린이가 있어요."},{"no":35,"k":"여자","e":"woman","s":"제 여자가 있어요."},{"no":36,"k":"여학생","e":"female student","s":"제 여학생이 있어요."},{"no":37,"k":"연예인","e":"celebrity","s":"저는 연예인을 좋아해요."},{"no":38,"k":"유명하다","e":"famous","s":"저는 유명해요."},{"no":39,"k":"은행원","e":"bank clerk","s":"저는 은행원에 가요."},{"no":40,"k":"음악가","e":"musician","s":"저는 음악가를 좋아해요."},{"no":41,"k":"의사","e":"doctor","s":"제 의사가 있어요."},{"no":42,"k":"인구","e":"population","s":"저는 인구를 좋아해요."},{"no":43,"k":"인기","e":"popularity","s":"저는 인기를 좋아해요."},{"no":44,"k":"인기스타","e":"popular star","s":"저는 인기스타를 좋아해요."},{"no":45,"k":"인형","e":"doll","s":"저는 인형을 좋아해요."},{"no":46,"k":"점원","e":"clerk","s":"저는 점원을 좋아해요."},{"no":47,"k":"종업원","e":"employee","s":"제 종업원이 있어요."},{"no":48,"k":"주부","e":"housewife","s":"제 주부가 있어요."},{"no":49,"k":"직원","e":"employee, staff","s":"제 직원이 있어요."},{"no":50,"k":"탤런트","e":"entertainers","s":"저는 탤런트를 좋아해요."},{"no":51,"k":"학생","e":"student","s":"제 학생이 있어요."},{"no":52,"k":"화가","e":"artist, painter","s":"저는 화가를 좋아해요."},{"no":53,"k":"후배","e":"Junior","s":"저는 후배를 좋아해요."}]},{"id":4,"ko":"음식 & 식재료","en":"Food & Ingredients","color":"#FFC000","short":"Food","words":[{"no":1,"k":"간식","e":"snack","s":"저는 간식을 먹어요."},{"no":2,"k":"간장","e":"soy sauce","s":"저는 간장을 먹어요."},{"no":3,"k":"갈비","e":"Galvi, spareribs","s":"저는 갈비를 좋아해요."},{"no":4,"k":"갈비탕","e":"Galbitang, spareribs soup","s":"저는 갈비탕을 먹어요."},{"no":5,"k":"감","e":"persimmon","s":"저는 감을 좋아해요."},{"no":6,"k":"감자","e":"potato","s":"저는 감자를 좋아해요."},{"no":7,"k":"감자탕","e":"Gamjatang, potato soup","s":"저는 감자탕을 먹어요."},{"no":8,"k":"고기","e":"meat","s":"저는 고기를 먹어요."},{"no":9,"k":"고추","e":"red pepper","s":"저는 고추를 좋아해요."},{"no":10,"k":"고추장","e":"Kochujang, red pepper paste","s":"저는 고추장을 좋아해요."},{"no":11,"k":"과일","e":"fruit","s":"저는 과일을 먹어요."},{"no":12,"k":"과자","e":"snack","s":"저는 과자를 먹어요."},{"no":13,"k":"국","e":"soup","s":"저는 국을 먹어요."},{"no":14,"k":"국수","e":"noodle","s":"저는 국수를 먹어요."},{"no":15,"k":"귤","e":"mandarin orange","s":"제 귤이 있어요."},{"no":16,"k":"기름","e":"oil, gasoline","s":"기름 시간이 있어요."},{"no":17,"k":"김","e":"seaweed","s":"저는 김을 좋아해요."},{"no":18,"k":"김밥","e":"Kimbab","s":"저는 김밥을 좋아해요."},{"no":19,"k":"김치","e":"Kimchi","s":"저는 김치를 좋아해요."},{"no":20,"k":"김치찌개","e":"Kimchi stew","s":"저는 김치찌개를 좋아해요."},{"no":21,"k":"껌","e":"chewing gum","s":"저는 껌을 좋아해요."},{"no":22,"k":"냉면","e":"cold noodle","s":"저는 냉면을 먹어요."},{"no":23,"k":"녹차","e":"green tea","s":"저는 녹차를 먹어요."},{"no":24,"k":"달걀","e":"egg","s":"저는 달걀을 먹어요."},{"no":25,"k":"닭","e":"chicken, hen","s":"저는 닭을 좋아해요."},{"no":26,"k":"닭고기","e":"chicken","s":"저는 닭고기를 좋아해요."},{"no":27,"k":"당근","e":"carrot","s":"저는 당근을 좋아해요."},{"no":28,"k":"돼지고기","e":"pork","s":"저는 돼지고기를 좋아해요."},{"no":29,"k":"된장","e":"fermented soybean paste","s":"된장 시간이 있어요."},{"no":30,"k":"된장국","e":"soybean paste soup","s":"저는 된장국을 먹어요."},{"no":31,"k":"된장찌개","e":"soybean paste stew","s":"된장찌개 시간이 있어요."},{"no":32,"k":"두부","e":"tofu","s":"저는 두부를 좋아해요."},{"no":33,"k":"두부찌개","e":"tofu soup","s":"저는 두부찌개를 먹어요."},{"no":34,"k":"딸기","e":"strawberry","s":"저는 딸기를 좋아해요."},{"no":35,"k":"떡","e":"rice cake","s":"저는 떡을 먹어요."},{"no":36,"k":"떡국","e":"rice cake soup","s":"저는 떡국을 먹어요."},{"no":37,"k":"떡볶이","e":"Toppogi","s":"저는 떡볶이를 좋아해요."},{"no":38,"k":"라면","e":"ramen","s":"저는 라면을 좋아해요."},{"no":39,"k":"마늘","e":"garlic","s":"저는 마늘을 좋아해요."},{"no":40,"k":"만두","e":"dumpling","s":"저는 만두를 좋아해요."},{"no":41,"k":"맥주","e":"beer","s":"저는 맥주를 먹어요."},{"no":42,"k":"무","e":"radish","s":"저는 무를 좋아해요."},{"no":43,"k":"밀가루","e":"flour","s":"저는 밀가루를 좋아해요."},{"no":44,"k":"바나나","e":"banana","s":"저는 바나나를 좋아해요."},{"no":45,"k":"반찬","e":"side dish","s":"저는 반찬을 좋아해요."},{"no":46,"k":"밥","e":"rice, meal","s":"저는 밥을 먹어요."},{"no":47,"k":"복숭아","e":"peach","s":"저는 복숭아를 좋아해요."},{"no":48,"k":"볶음밥","e":"fried rice","s":"저는 볶음밥을 먹어요."},{"no":49,"k":"불고기","e":"Bulgogi, grilled meat","s":"저는 불고기를 먹어요."},{"no":50,"k":"비빔밥","e":"Bibimbap, mixed rice","s":"저는 비빔밥을 먹어요."},{"no":51,"k":"빵","e":"bread","s":"저는 빵을 먹어요."},{"no":52,"k":"사과","e":"apple","s":"저는 사과를 좋아해요."},{"no":53,"k":"사이다","e":"cider","s":"저는 사여요."},{"no":54,"k":"사탕","e":"candy","s":"저는 사탕을 먹어요."},{"no":55,"k":"삼계탕","e":"Samgyetang","s":"삼계탕 시간이 있어요."},{"no":56,"k":"새우","e":"shrimp","s":"저는 새우를 좋아해요."},{"no":57,"k":"샌드위치","e":"sandwich","s":"저는 샌드위치를 먹어요."},{"no":58,"k":"생선","e":"fish","s":"저는 생선을 먹어요."},{"no":59,"k":"설렁탕","e":"Seolleongtang","s":"저는 설렁탕을 좋아해요."},{"no":60,"k":"설탕","e":"sugar","s":"저는 설탕을 좋아해요."},{"no":61,"k":"소고기","e":"beef","s":"저는 소고기를 좋아해요."},{"no":62,"k":"소금","e":"salt","s":"저는 소금을 좋아해요."},{"no":63,"k":"수돗물","e":"tap water","s":"저는 수돗물을 먹어요."},{"no":64,"k":"수박","e":"watermelon","s":"저는 수박을 먹어요."},{"no":65,"k":"술","e":"alcohol, liquor","s":"저는 술을 좋아해요."},{"no":66,"k":"쌀","e":"rice","s":"저는 쌀을 먹어요."},{"no":67,"k":"쌀밥","e":"cooked rice","s":"저는 쌀밥을 먹어요."},{"no":68,"k":"아이스크림","e":"ice cream","s":"저는 아이스크림을 먹어요."},{"no":69,"k":"야채","e":"vegetable","s":"저는 야채를 먹어요."},{"no":70,"k":"양파","e":"onion","s":"저는 양파를 좋아해요."},{"no":71,"k":"오렌지","e":"orange","s":"저는 오렌지를 좋아해요."},{"no":72,"k":"오이","e":"cucumber","s":"저는 오이를 좋아해요."},{"no":73,"k":"오징어","e":"squid","s":"저는 오징어를 좋아해요."},{"no":74,"k":"음료수","e":"drink, soft drink","s":"저는 음료수를 먹어요."},{"no":75,"k":"음식","e":"food, cooking","s":"저는 음식을 먹어요."},{"no":76,"k":"인삼","e":"ginseng","s":"저는 인삼을 좋아해요."},{"no":77,"k":"자장면","e":"Jajangmyeon","s":"저는 자장면을 좋아해요."},{"no":78,"k":"죽","e":"bamboo, porridge","s":"저는 죽을 좋아해요."},{"no":79,"k":"찌개","e":"stew, soup","s":"저는 찌개를 먹어요."},{"no":80,"k":"차","e":"car, tea","s":"저는 차를 먹어요."},{"no":81,"k":"채소","e":"vegetable","s":"저는 채소를 먹어요."},{"no":82,"k":"초콜릿","e":"chocolate","s":"저는 초콜릿을 먹어요."},{"no":83,"k":"카레","e":"curry","s":"저는 카레를 좋아해요."},{"no":84,"k":"커피","e":"coffee","s":"저는 커피를 먹어요."},{"no":85,"k":"케이크","e":"cake","s":"저는 케이크를 먹어요."},{"no":86,"k":"콜라","e":"Coke","s":"저는 콜라를 좋아해요."},{"no":87,"k":"콩","e":"bean, soy","s":"콩 시간이 있어요."},{"no":88,"k":"토마토","e":"tomato","s":"저는 토마토를 좋아해요."},{"no":89,"k":"팀","e":"team","s":"저는 팀을 먹어요."},{"no":90,"k":"파","e":"wave, green onion","s":"저는 파를 좋아해요."},{"no":91,"k":"포도","e":"grape","s":"저는 포도를 좋아해요."},{"no":92,"k":"피자","e":"pizza","s":"저는 피자를 먹어요."},{"no":93,"k":"햄버거","e":"hamburger","s":"저는 햄버거를 먹어요."},{"no":94,"k":"홍차","e":"black tea","s":"저는 홍차를 먹어요."}]},{"id":5,"ko":"식당 & 요리","en":"Restaurant & Cooking","color":"#C00000","short":"Dining","words":[{"no":1,"k":"건배","e":"cheers, toast","s":"저는 건배를 좋아해요."},{"no":2,"k":"계란","e":"egg","s":"저는 계란을 먹어요."},{"no":3,"k":"굽다","e":"bake","s":"생선을 구워요."},{"no":4,"k":"그릇","e":"bowl, container, tableware","s":"저는 그릇을 좋아해요."},{"no":5,"k":"끓이다","e":"boil","s":"물을 끓여요."},{"no":6,"k":"냄비","e":"pot","s":"저는 냄비를 좋아해요."},{"no":7,"k":"달다","e":"sweet","s":"이것이 달아요."},{"no":8,"k":"담그다","e":"dip, pickle","s":"저는 담써요."},{"no":9,"k":"더운물","e":"hot water","s":"저는 더운물을 먹어요."},{"no":10,"k":"드시다","e":"eat (honorific form)","s":"저는 드여요."},{"no":11,"k":"뜨겁다","e":"hot","s":"날씨가 뜨거워요."},{"no":12,"k":"뜨다","e":"rise, open (the eyes)","s":"저는 써요."},{"no":13,"k":"마시다","e":"drink","s":"물을 마셔요."},{"no":14,"k":"맛","e":"flavor, taste","s":"저는 맛을 좋아해요."},{"no":15,"k":"맛없다","e":"not delicious","s":"음식이 맛없어요."},{"no":16,"k":"맛있다","e":"delicious","s":"음식이 맛있어요."},{"no":17,"k":"맵다","e":"spicy","s":"이것이 매워요."},{"no":18,"k":"먹다","e":"eat","s":"밥을 먹어요."},{"no":19,"k":"메뉴","e":"menu","s":"저는 메뉴를 좋아해요."},{"no":20,"k":"물","e":"water","s":"저는 물을 먹어요."},{"no":21,"k":"배달","e":"delivery","s":"배달 시간이 있어요."},{"no":22,"k":"볶다","e":"fry","s":"야채를 볶아요."},{"no":23,"k":"부치다","e":"send, fry, transmit","s":"저는 부여요."},{"no":24,"k":"붓다","e":"pour","s":"저는 붓어요."},{"no":25,"k":"수저","e":"chopsticks and a spoon","s":"저는 수저를 좋아해요."},{"no":26,"k":"숟가락","e":"spoon","s":"저는 숟가락을 좋아해요."},{"no":27,"k":"시다","e":"sour","s":"이것이 여요."},{"no":28,"k":"시키다","e":"make someone do, order","s":"저는 시여요."},{"no":29,"k":"식당","e":"restaurant, cafeteria","s":"저는 식당에 가요."},{"no":30,"k":"식사","e":"meal","s":"저는 식사를 좋아해요."},{"no":31,"k":"식탁","e":"table","s":"저는 식탁을 좋아해요."},{"no":32,"k":"싱겁다","e":"not salty","s":"이것이 싱거워요."},{"no":33,"k":"썰다","e":"chop, cut","s":"저는 썰어요."},{"no":34,"k":"씹다","e":"chew, bite","s":"저는 씨워요."},{"no":35,"k":"아침","e":"morning, breakfast","s":"저는 아침을 좋아해요."},{"no":36,"k":"아침밥","e":"breakfast","s":"저는 아침밥을 좋아해요."},{"no":37,"k":"아침식사","e":"breakfast","s":"저는 아침식사를 좋아해요."},{"no":38,"k":"요리","e":"cooking, cuisine","s":"저는 요리를 좋아해요."},{"no":39,"k":"우유","e":"milk","s":"저는 우유를 먹어요."},{"no":40,"k":"자리","e":"seat, location","s":"저는 자리를 먹어요."},{"no":41,"k":"잔","e":"glass, ~ cup(s)","s":"커피 한 잔 주세요."},{"no":42,"k":"잡수시다","e":"eat (honorific form)","s":"저는 잡수여요."},{"no":43,"k":"저녁","e":"dinner, evening, night","s":"저녁 시간이 있어요."},{"no":44,"k":"저녁식사","e":"dinner","s":"저는 저녁식사를 좋아해요."},{"no":45,"k":"점심","e":"lunch","s":"저는 점심을 좋아해요."},{"no":46,"k":"점심시간","e":"lunchtime","s":"저는 점심시간을 좋아해요."},{"no":47,"k":"점심식사","e":"lunch","s":"저는 점심식사를 좋아해요."},{"no":48,"k":"젓가락","e":"chopsticks","s":"저는 젓가락을 좋아해요."},{"no":49,"k":"주문하다","e":"order","s":"저는 주문해요."},{"no":50,"k":"주스","e":"juice","s":"저는 주스를 먹어요."},{"no":51,"k":"중국집","e":"Chinese restaurant","s":"저는 중국집에 가요."},{"no":52,"k":"중식","e":"Chinese cuisine","s":"저는 중식을 좋아해요."},{"no":53,"k":"짓다","e":"build, create","s":"저는 짓어요."},{"no":54,"k":"짜다","e":"salty, make (the plan)","s":"이것이 짜요."},{"no":55,"k":"차갑다","e":"cold","s":"날씨가 차갑아요."},{"no":56,"k":"카페","e":"cafe, coffee shop","s":"저는 카페에 가요."},{"no":57,"k":"칼","e":"knife, cutlery","s":"저는 칼을 좋아해요."},{"no":58,"k":"커피숍","e":"coffee shop","s":"저는 커피숍에 가요."},{"no":59,"k":"컵","e":"cup","s":"저는 컵을 좋아해요."},{"no":60,"k":"테이블","e":"table","s":"저는 테이블을 좋아해요."},{"no":61,"k":"포장","e":"packing","s":"저는 포장을 좋아해요."}]},{"id":6,"ko":"쇼핑 & 돈","en":"Shopping & Money","color":"#7030A0","short":"Shopping","words":[{"no":1,"k":"가게","e":"store, shop","s":"저는 가게에 가요."},{"no":2,"k":"가격","e":"price","s":"이 가방의 가격이 얼마예요?"},{"no":3,"k":"값","e":"price","s":"저는 값을 먹어요."},{"no":4,"k":"계산하다","e":"calculate","s":"음식값을 계산해요."},{"no":5,"k":"고르다","e":"choose","s":"마음에 드는 옷을 골라요."},{"no":6,"k":"공중전화","e":"payphone, public phone","s":"저는 공중전화를 좋아해요."},{"no":7,"k":"공짜","e":"free","s":"저는 공짜를 좋아해요."},{"no":8,"k":"광고","e":"advertisement","s":"저는 광고를 좋아해요."},{"no":9,"k":"교체","e":"substitute, change","s":"저는 교체를 좋아해요."},{"no":10,"k":"꽃집","e":"florist","s":"저는 꽃집을 좋아해요."},{"no":11,"k":"내다","e":"pay, put out","s":"저는 내어요."},{"no":12,"k":"달러","e":"dollar","s":"저는 달러를 좋아해요."},{"no":13,"k":"돈","e":"money","s":"저는 돈을 좋아해요."},{"no":14,"k":"동전","e":"coin","s":"저는 동전을 좋아해요."},{"no":15,"k":"무료","e":"free","s":"저는 무료를 좋아해요."},{"no":16,"k":"문구점","e":"stationery store","s":"저는 문구점에 가요."},{"no":17,"k":"물건","e":"stuff, thing","s":"저는 물건을 좋아해요."},{"no":18,"k":"미용실","e":"beauty salon","s":"저는 미용실을 좋아해요."},{"no":19,"k":"백화점","e":"department store","s":"저는 백화점에 가요."},{"no":20,"k":"벌다","e":"earn, make money","s":"저는 벌어요."},{"no":21,"k":"부동산","e":"real estate","s":"저는 부동산을 좋아해요."},{"no":22,"k":"비싸다","e":"expensive","s":"값이 비싸요."},{"no":23,"k":"빌리다","e":"borrow, lend","s":"저는 빌여요."},{"no":24,"k":"빵집","e":"bakery","s":"저는 빵집을 좋아해요."},{"no":25,"k":"사다","e":"buy","s":"시장에서 사과를 사요."},{"no":26,"k":"상자","e":"box","s":"저는 상자를 좋아해요."},{"no":27,"k":"상품","e":"product","s":"저는 상품을 좋아해요."},{"no":28,"k":"서비스","e":"service","s":"저는 서비스를 먹어요."},{"no":29,"k":"서점","e":"bookstore","s":"저는 서점에 가요."},{"no":30,"k":"선택하다","e":"choose, select","s":"메뉴를 선택해요."},{"no":31,"k":"쇼핑","e":"shopping","s":"저는 쇼핑에 가요."},{"no":32,"k":"슈퍼마켓","e":"supermarket","s":"저는 슈퍼마켓에 가요."},{"no":33,"k":"시장","e":"market","s":"저는 시장에 가요."},{"no":34,"k":"싸다","e":"cheap, wrap","s":"값이 싸요."},{"no":35,"k":"약국","e":"pharmacy","s":"저는 약국을 좋아해요."},{"no":36,"k":"엔","e":"yen","s":"저는 엔을 좋아해요."},{"no":37,"k":"옷가게","e":"clothing store","s":"저는 옷가게에 가요."},{"no":38,"k":"요금","e":"fee","s":"저는 요금을 좋아해요."},{"no":39,"k":"원","e":"won (currency units of Korea)","s":"저는 원을 좋아해요."},{"no":40,"k":"월급","e":"monthly salary","s":"저는 월급을 좋아해요."},{"no":41,"k":"은행","e":"bank","s":"저는 은행에 가요."},{"no":42,"k":"책방","e":"bookstore","s":"저는 책방에 가요."},{"no":43,"k":"카드","e":"card","s":"저는 카드를 좋아해요."},{"no":44,"k":"통장","e":"bank book, (deposit) passbook","s":"저는 통장에 가요."},{"no":45,"k":"팔다","e":"sell","s":"시장에서 과일을 팔아요."},{"no":46,"k":"팔리다","e":"sell, be sold","s":"책이 많이 팔려요."},{"no":47,"k":"할인","e":"sale, discount","s":"저는 할인을 좋아해요."},{"no":48,"k":"현금","e":"cash","s":"저는 현금을 좋아해요."}]},{"id":7,"ko":"옷 & 패션","en":"Clothing & Fashion","color":"#00B0F0","short":"Clothing","words":[{"no":1,"k":"가방","e":"bag","s":"저는 가방을 좋아해요."},{"no":2,"k":"구두","e":"shoes","s":"저는 구두를 좋아해요."},{"no":3,"k":"그때","e":"then, at that time","s":"그때 시간이 있어요."},{"no":4,"k":"넥타이","e":"necktie","s":"저는 넥타이를 좋아해요."},{"no":5,"k":"등산복","e":"mountaineering clothing","s":"저는 등산복에 가요."},{"no":6,"k":"등산화","e":"hiking boots, climbing shoes","s":"저는 등산화를 좋아해요."},{"no":7,"k":"디자인","e":"design","s":"저는 디자인을 좋아해요."},{"no":8,"k":"떠들다","e":"chatter, make a noise","s":"저는 떠들어요."},{"no":9,"k":"모자","e":"hat","s":"저는 모자를 좋아해요."},{"no":10,"k":"목걸이","e":"necklace","s":"저는 목걸이를 좋아해요."},{"no":11,"k":"바지","e":"pants","s":"저는 바지를 좋아해요."},{"no":12,"k":"반바지","e":"shorts","s":"저는 반바지를 좋아해요."},{"no":13,"k":"반지","e":"ring","s":"저는 반지를 좋아해요."},{"no":14,"k":"벗다","e":"take off (clothes, shoes)","s":"신발을 벗어요."},{"no":15,"k":"봉지","e":"bag","s":"저는 봉지를 좋아해요."},{"no":16,"k":"블라우스","e":"blouse","s":"저는 블라우스를 좋아해요."},{"no":17,"k":"빨다","e":"suck, do laundry","s":"저는 빨아요."},{"no":18,"k":"빨래","e":"laundry, wash","s":"저는 빨래를 좋아해요."},{"no":19,"k":"탁기","e":"washing machine","s":""},{"no":20,"k":"탁소","e":"dry cleaners, laundromat","s":""},{"no":21,"k":"손수건","e":"handkerchief","s":"저는 손수건을 좋아해요."},{"no":22,"k":"수영복","e":"swimsuit","s":"저는 수영복을 좋아해요."},{"no":23,"k":"스웨터","e":"sweater","s":"저는 스웨터를 먹어요."},{"no":24,"k":"스타킹","e":"stockings","s":"저는 스타킹을 좋아해요."},{"no":25,"k":"신다","e":"put on, wear","s":"신발을 신어요."},{"no":26,"k":"신발","e":"shoes, footwear","s":"저는 신발을 좋아해요."},{"no":27,"k":"안경","e":"glasses","s":"저는 안경을 좋아해요."},{"no":28,"k":"액서리","e":"accessory","s":""},{"no":29,"k":"양말","e":"socks","s":"양말 시간이 있어요."},{"no":30,"k":"양복","e":"suit","s":"저는 양복을 좋아해요."},{"no":31,"k":"옷","e":"dress, clothes","s":"저는 옷을 좋아해요."},{"no":32,"k":"옷장","e":"closet","s":"저는 옷장을 좋아해요."},{"no":33,"k":"와이셔츠","e":"shirt","s":"저는 와이셔츠를 좋아해요."},{"no":34,"k":"운동복","e":"sportswear, gym clothes","s":"저는 운동복에 가요."},{"no":35,"k":"운동화","e":"sports shoes","s":"저는 운동화를 좋아해요."},{"no":36,"k":"원피스","e":"one-piece dress","s":"저는 원피스를 좋아해요."},{"no":37,"k":"유행","e":"trend","s":"저는 유행을 좋아해요."},{"no":38,"k":"입다","e":"put on, wear","s":"옷을 입어요."},{"no":39,"k":"장갑","e":"gloves","s":"저는 장갑을 좋아해요."},{"no":40,"k":"재킷","e":"jacket","s":"저는 재킷을 좋아해요."},{"no":41,"k":"저렇게","e":"like that, in that way","s":"저는 저렇게를 좋아해요."},{"no":42,"k":"점퍼","e":"jacket","s":"저는 점퍼를 좋아해요."},{"no":43,"k":"주소","e":"address","s":"저는 주소를 좋아해요."},{"no":44,"k":"청바지","e":"blue jeans","s":"저는 청바지를 좋아해요."},{"no":45,"k":"치마","e":"skirt","s":"저는 치마를 좋아해요."},{"no":46,"k":"코트","e":"coat","s":"저는 코트를 좋아해요."},{"no":47,"k":"티셔츠","e":"t-shirt","s":"저는 티셔츠를 좋아해요."},{"no":48,"k":"패션","e":"fashion","s":"저는 패션을 좋아해요."},{"no":49,"k":"한복","e":"Hanbok, Korean traditional clothes","s":"저는 한복을 좋아해요."}]},{"id":8,"ko":"집 & 생활","en":"Home & Daily Life","color":"#92D050","short":"Home Life","words":[{"no":1,"k":"가구","e":"furniture","s":"저는 가구를 좋아해요."},{"no":2,"k":"거실","e":"living room","s":"저는 거실에 가요."},{"no":3,"k":"거울","e":"mirror","s":"저는 거울을 좋아해요."},{"no":4,"k":"계단","e":"stairs","s":"저는 계단을 좋아해요."},{"no":5,"k":"고장","e":"broken, malfunction","s":"저는 고장을 좋아해요."},{"no":6,"k":"고치다","e":"fix","s":"고장난 시계를 고쳐요."},{"no":7,"k":"기숙사","e":"dormitory","s":"저는 기숙사를 좋아해요."},{"no":8,"k":"깨끗하다","e":"clean","s":"방이 깨끗해요."},{"no":9,"k":"끄다","e":"turn off, extinguish, stop","s":"컴퓨터를 꺼요."},{"no":10,"k":"냉장고","e":"refrigerator","s":"저는 냉장고를 좋아해요."},{"no":11,"k":"닦다","e":"wipe, polish","s":"이를 닦아요."},{"no":12,"k":"닫다","e":"close","s":"문을 닫아요."},{"no":13,"k":"닫히다","e":"shut, close","s":"가게 문이 닫혀요."},{"no":14,"k":"댁","e":"house","s":"저는 댁을 좋아해요."},{"no":15,"k":"더럽다","e":"dirty","s":"옷이 더러워요."},{"no":16,"k":"마르다","e":"dry","s":"저는 말라요."},{"no":17,"k":"목욕","e":"bath, bathing","s":"저는 목욕을 좋아해요."},{"no":18,"k":"목욕하다","e":"take a bath","s":"저는 목욕해요."},{"no":19,"k":"문","e":"door, gate","s":"저는 문을 좋아해요."},{"no":20,"k":"방","e":"room","s":"저는 방에 가요."},{"no":21,"k":"버리다","e":"abandon, throw away","s":"쓰레기를 버려요."},{"no":22,"k":"벽","e":"wall","s":"벽 시간이 있어요."},{"no":23,"k":"부엌","e":"kitchen","s":"저는 부엌을 좋아해요."},{"no":24,"k":"불","e":"fire, electrical light","s":"저는 불을 좋아해요."},{"no":25,"k":"생활","e":"life","s":"저는 생활을 좋아해요."},{"no":26,"k":"샤워하다","e":"take a shower","s":"저는 샤워해요."},{"no":27,"k":"선풍기","e":"fan","s":"저는 선풍기를 좋아해요."},{"no":28,"k":"설거지","e":"washing dishes, dish-washing","s":"저는 설거지를 좋아해요."},{"no":29,"k":"계","e":"world","s":""},{"no":30,"k":"수하다","e":"wash","s":""},{"no":31,"k":"우다","e":"set up, formulate","s":""},{"no":32,"k":"일하다","e":"have a sale","s":"회사에서 일해요."},{"no":33,"k":"소파","e":"sofa","s":"소파 시간이 있어요."},{"no":34,"k":"수건","e":"towel, washcloth","s":"저는 수건을 좋아해요."},{"no":35,"k":"쓰레기","e":"garbage","s":"저는 쓰레기를 좋아해요."},{"no":36,"k":"씻다","e":"wash","s":"손을 씻어요."},{"no":37,"k":"아파트","e":"apartment, mansion","s":"제 아파트가 있어요."},{"no":38,"k":"에어컨","e":"air conditioner","s":"저는 에어컨을 좋아해요."},{"no":39,"k":"엘리베이터","e":"elevator","s":"저는 엘리베이터를 좋아해요."},{"no":40,"k":"열쇠","e":"key","s":"저는 열쇠를 좋아해요."},{"no":41,"k":"의자","e":"chair","s":"저는 의자를 좋아해요."},{"no":42,"k":"이사","e":"move, moving","s":"저는 이사를 좋아해요."},{"no":43,"k":"입구","e":"entrance","s":"저는 입구를 좋아해요."},{"no":44,"k":"잠자다","e":"sleep, go to bed","s":"저는 잠자요."},{"no":45,"k":"정문","e":"front door, main gate","s":"저는 정문을 좋아해요."},{"no":46,"k":"지갑","e":"wallet","s":"지갑 시간이 있어요."},{"no":47,"k":"집","e":"house, shop","s":"저는 집에 가요."},{"no":48,"k":"창문","e":"window","s":"저는 창문을 좋아해요."},{"no":49,"k":"책상","e":"desk","s":"저는 책상을 좋아해요."},{"no":50,"k":"책장","e":"bookshelf","s":"저는 책장을 좋아해요."},{"no":51,"k":"청소기","e":"vacuum cleaner","s":"저는 청소기를 좋아해요."},{"no":52,"k":"청소하다","e":"sweep, clean","s":"방을 청소해요."},{"no":53,"k":"출구","e":"exit","s":"저는 출구를 좋아해요."},{"no":54,"k":"층","e":"layer, ~ floor","s":"3층에 화장실이 있어요."},{"no":55,"k":"침대","e":"bed","s":"저는 침대를 좋아해요."},{"no":56,"k":"켜다","e":"turn on (light, power, etc.)","s":"불을 켜요."},{"no":57,"k":"타월","e":"towel","s":"저는 타월을 좋아해요."},{"no":58,"k":"텔레비전","e":"TV","s":"저는 텔레비전을 좋아해요."},{"no":59,"k":"틀다","e":"turn on (the switch)","s":"저는 틀어요."},{"no":60,"k":"하숙","e":"boarding house, lodging house","s":"저는 하숙을 좋아해요."},{"no":61,"k":"하숙집","e":"boarding house, lodging house","s":"저는 하숙집을 좋아해요."},{"no":62,"k":"화장실","e":"restroom, toilet, lavatory","s":"저는 화장실에 가요."},{"no":63,"k":"휴지","e":"toilet paper","s":"저는 휴지를 좋아해요."},{"no":64,"k":"휴지통","e":"trash can","s":"저는 휴지통을 좋아해요."}]},{"id":9,"ko":"학교 & 공부","en":"School & Education","color":"#0070C0","short":"School","words":[{"no":1,"k":"가르치다","e":"teach","s":"수학을 가르쳐요."},{"no":2,"k":"강좌","e":"lecture","s":"저는 강좌를 좋아해요."},{"no":3,"k":"고등학교","e":"high school","s":"저는 고등학교에 가요."},{"no":4,"k":"고등학생","e":"high school student","s":"저는 고등학생에 가요."},{"no":5,"k":"공부","e":"study","s":"저는 공부를 좋아해요."},{"no":6,"k":"공부하다","e":"study","s":"매일 공부해요."},{"no":7,"k":"공책","e":"notebook, note","s":"저는 공책을 좋아해요."},{"no":8,"k":"과학","e":"science","s":"저는 과학을 좋아해요."},{"no":9,"k":"교과서","e":"textbook","s":"저는 교과서를 좋아해요."},{"no":10,"k":"교실","e":"classroom","s":"저는 교실에 가요."},{"no":11,"k":"국어","e":"Korean language","s":"저는 국어를 좋아해요."},{"no":12,"k":"규칙","e":"rule","s":"저는 규칙을 좋아해요."},{"no":13,"k":"글","e":"post, sentence, character","s":"저는 글을 좋아해요."},{"no":14,"k":"급","e":"class, grade","s":"저는 한국어 2급이에요."},{"no":15,"k":"노트","e":"note","s":"저는 노트를 좋아해요."},{"no":16,"k":"단어","e":"word","s":"저는 단어를 좋아해요."},{"no":17,"k":"대학","e":"university, college","s":"저는 대학을 좋아해요."},{"no":18,"k":"대학교","e":"university, college","s":"저는 대학교를 좋아해요."},{"no":19,"k":"대학생","e":"college student","s":"제 대학생이 있어요."},{"no":20,"k":"대학원","e":"graduate school","s":"저는 대학원에 가요."},{"no":21,"k":"대학원생","e":"postgraduate student, graduate student","s":"제 대학원생이 있어요."},{"no":22,"k":"독서","e":"reading","s":"저는 독서를 좋아해요."},{"no":23,"k":"독서실","e":"reading room","s":"저는 독서실에 가요."},{"no":24,"k":"독서하다","e":"read","s":"저는 독서해요."},{"no":25,"k":"듣기","e":"listening, hearing","s":"저는 듣기를 좋아해요."},{"no":26,"k":"말하기","e":"speaking","s":"저는 말하기를 좋아해요."},{"no":27,"k":"문장","e":"sentence","s":"저는 문장을 좋아해요."},{"no":28,"k":"발음","e":"pronunciation","s":"저는 발음을 좋아해요."},{"no":29,"k":"발표","e":"announcement, presentation","s":"저는 발표를 좋아해요."},{"no":30,"k":"배우다","e":"learn","s":"피아노를 배워요."},{"no":31,"k":"볼펜","e":"ballpoint pen","s":"볼펜 시간이 있어요."},{"no":32,"k":"사례","e":"case, example","s":"저는 사례를 좋아해요."},{"no":33,"k":"사전","e":"dictionary","s":"저는 사전을 좋아해요."},{"no":34,"k":"설명","e":"explanation, description","s":"저는 설명을 좋아해요."},{"no":35,"k":"설명하다","e":"explain","s":"선생님이 설명해요."},{"no":36,"k":"수업","e":"class, lesson","s":"제 수업이 있어요."},{"no":37,"k":"수첩","e":"note, notebook","s":"저는 수첩을 좋아해요."},{"no":38,"k":"수학","e":"mathematics","s":"저는 수학을 좋아해요."},{"no":39,"k":"숙제","e":"homework","s":"저는 숙제를 좋아해요."},{"no":40,"k":"스페인어","e":"Spanish","s":"저는 스페인어를 좋아해요."},{"no":41,"k":"시험","e":"exam, test","s":"저는 시험을 좋아해요."},{"no":42,"k":"쓰기","e":"writing, dictation","s":"저는 쓰기를 좋아해요."},{"no":43,"k":"쓰다","e":"write, use, wear (glasses)","s":"모자를 써요."},{"no":44,"k":"아랍어","e":"Arabic","s":"저는 아랍어를 좋아해요."},{"no":45,"k":"연습","e":"practice","s":"저는 연습을 먹어요."},{"no":46,"k":"연습하다","e":"practice","s":"매일 연습해요."},{"no":47,"k":"연필","e":"pencil","s":"저는 연필을 좋아해요."},{"no":48,"k":"열다","e":"open","s":"창문을 열어요."},{"no":49,"k":"열리다","e":"be opened","s":"문이 열려요."},{"no":50,"k":"영어","e":"English","s":"저는 영어를 좋아해요."},{"no":51,"k":"영어회화","e":"English conversation","s":"저는 영어회화를 좋아해요."},{"no":52,"k":"예문","e":"example, model sentence","s":"저는 예문을 좋아해요."},{"no":53,"k":"외국어","e":"foreign language","s":"저는 외국어를 좋아해요."},{"no":54,"k":"이해","e":"understanding","s":"저는 이해를 좋아해요."},{"no":55,"k":"이해하다","e":"understand","s":"선생님의 말을 이해해요."},{"no":56,"k":"인터넷","e":"internet","s":"저는 인터넷을 좋아해요."},{"no":57,"k":"일기","e":"diary","s":"저는 일기를 좋아해요."},{"no":58,"k":"읽기","e":"reading","s":"저는 읽기를 좋아해요."},{"no":59,"k":"읽다","e":"read","s":"책을 읽어요."},{"no":60,"k":"입학","e":"admission","s":"저는 입학을 좋아해요."},{"no":61,"k":"적다","e":"be few, write down","s":"이것이 적어요."},{"no":62,"k":"전공","e":"major","s":"저는 전공을 좋아해요."},{"no":63,"k":"전자사전","e":"electronic dictionary","s":"저는 전자사전을 좋아해요."},{"no":64,"k":"점수","e":"score, point","s":"저는 점수를 좋아해요."},{"no":65,"k":"졸업","e":"graduation","s":"저는 졸업을 좋아해요."},{"no":66,"k":"졸업하다","e":"graduate","s":"이번 달에 졸업해요."},{"no":67,"k":"중국어","e":"Chinese","s":"저는 중국어를 좋아해요."},{"no":68,"k":"중학교","e":"middle school, Junior high school","s":"저는 중학교에 가요."},{"no":69,"k":"중학생","e":"middle school student","s":"저는 중학생에 가요."},{"no":70,"k":"지각","e":"tardy, being late","s":"저는 지각을 좋아해요."},{"no":71,"k":"지내다","e":"stay, spend, live","s":"저는 지내어요."},{"no":72,"k":"지우개","e":"eraser","s":"저는 지우개를 좋아해요."},{"no":73,"k":"질문","e":"question","s":"저는 질문을 좋아해요."},{"no":74,"k":"질문하다","e":"ask a question","s":"모르면 질문해요."},{"no":75,"k":"책","e":"book","s":"저는 책을 좋아해요."},{"no":76,"k":"초등학교","e":"elementary school","s":"저는 초등학교에 가요."},{"no":77,"k":"초등학생","e":"elementary student","s":"제 초등학생이 있어요."},{"no":78,"k":"칠판","e":"blackboard","s":"저는 칠판을 좋아해요."},{"no":79,"k":"컴퓨터","e":"computer, PC","s":"저는 컴퓨터를 좋아해요."},{"no":80,"k":"펜","e":"pen","s":"저는 펜을 좋아해요."},{"no":81,"k":"펴다","e":"spread, stretch","s":"저는 여요."},{"no":82,"k":"프린트","e":"print","s":"저는 프린트를 좋아해요."},{"no":83,"k":"필통","e":"pencil case","s":"저는 필통을 좋아해요."},{"no":84,"k":"학교","e":"school","s":"저는 학교에 가요."},{"no":85,"k":"학기","e":"semester","s":"저는 학기를 좋아해요."},{"no":86,"k":"학년","e":"grade, school year","s":"저는 학년에 가요."},{"no":87,"k":"학생증","e":"student ID card","s":"제 학생증이 있어요."},{"no":88,"k":"학원","e":"academy, school","s":"저는 학원에 가요."},{"no":89,"k":"한국어","e":"Korean language","s":"저는 한국어를 좋아해요."},{"no":90,"k":"한글","e":"Hangul","s":"저는 한글을 좋아해요."},{"no":91,"k":"합격","e":"pass","s":"저는 합격을 좋아해요."}]},{"id":10,"ko":"직장 & 일","en":"Work & Career","color":"#843C0C","short":"Work","words":[{"no":1,"k":"결과","e":"result","s":"시험 결과가 좋아요."},{"no":2,"k":"결정","e":"decision","s":"저는 결정을 좋아해요."},{"no":3,"k":"결정하다","e":"decide","s":"어디에 갈지 결정해요."},{"no":4,"k":"계획","e":"plan","s":"저는 계획을 좋아해요."},{"no":5,"k":"끝내다","e":"finish","s":"숙제를 끝내요."},{"no":6,"k":"노력하다","e":"endeavor, strive","s":"열심히 노력해요."},{"no":7,"k":"마치다","e":"finish, end","s":"저는 마여요."},{"no":8,"k":"메모","e":"memo","s":"저는 메모를 좋아해요."},{"no":9,"k":"모임","e":"meeting, gathering","s":"저는 모임을 좋아해요."},{"no":10,"k":"발전","e":"development","s":"저는 발전을 좋아해요."},{"no":11,"k":"보도","e":"sidewalk, report","s":"저는 보도를 좋아해요."},{"no":12,"k":"부업","e":"sideline","s":"저는 부업을 좋아해요."},{"no":13,"k":"사무실","e":"office","s":"저는 사무실에 가요."},{"no":14,"k":"사장","e":"CEO, the president","s":"저는 사장을 좋아해요."},{"no":15,"k":"서류","e":"document","s":"저는 서류를 좋아해요."},{"no":16,"k":"시작","e":"start","s":"저는 시작을 좋아해요."},{"no":17,"k":"시작하다","e":"start, begin","s":"수업을 시작해요."},{"no":18,"k":"신청서","e":"application forms","s":"저는 신청서를 좋아해요."},{"no":19,"k":"신청하다","e":"put in for, apply for","s":"수업을 신청해요."},{"no":20,"k":"인터뷰하다","e":"interview","s":"저는 인터뷰해요."},{"no":21,"k":"일하다","e":"work","s":"회사에서 일해요."},{"no":22,"k":"자동차회사","e":"car company","s":"저는 자동차회사를 좋아해요."},{"no":23,"k":"자료","e":"material, document","s":"저는 자료를 좋아해요."},{"no":24,"k":"정보","e":"information","s":"저는 정보를 좋아해요."},{"no":25,"k":"준비","e":"preparation","s":"시험 준비를 해요."},{"no":26,"k":"준비하다","e":"prepare","s":"발표를 준비해요."},{"no":27,"k":"직업","e":"job, profession","s":"저는 직업을 좋아해요."},{"no":28,"k":"직장","e":"workplace","s":"저는 직장에 가요."},{"no":29,"k":"출근하다","e":"go to work","s":"아침 아홉 시에 출근해요."},{"no":30,"k":"출장","e":"business trip","s":"저는 출장을 좋아해요."},{"no":31,"k":"취직하다","e":"get a job","s":"저는 취직해요."},{"no":32,"k":"퇴근하다","e":"leave the office","s":"저녁 여섯 시에 퇴근해요."},{"no":33,"k":"홈페이지","e":"home page","s":"저는 홈페이지를 좋아해요."},{"no":34,"k":"확인하다","e":"confirm, check","s":"이메일을 확인해요."},{"no":35,"k":"회사","e":"company","s":"저는 회사를 좋아해요."},{"no":36,"k":"회사원","e":"employee","s":"제 회사원이 있어요."},{"no":37,"k":"회의","e":"conference","s":"저는 회의를 좋아해요."}]},{"id":11,"ko":"교통 & 이동","en":"Getting Around","color":"#00B050","short":"Transport","words":[{"no":1,"k":"가다","e":"go","s":"저는 학교에 가요."},{"no":2,"k":"가져가다","e":"take away","s":"저는 가져가요."},{"no":3,"k":"가져오다","e":"bring","s":"저는 가져와요."},{"no":4,"k":"갈아타다","e":"transfer","s":"2호선으로 갈아타요."},{"no":5,"k":"건너가다","e":"cross (a road)","s":"저는 건너가요."},{"no":6,"k":"건너다","e":"cross over","s":"횡단보도를 건너요."},{"no":7,"k":"건너편","e":"other side, opposite side","s":"저는 건너편을 좋아해요."},{"no":8,"k":"걷다","e":"walk","s":"공원에서 걸어요."},{"no":9,"k":"걸어가다","e":"walk (go)","s":"저는 걸어가요."},{"no":10,"k":"걸어오다","e":"walk (come)","s":"저는 걸어와요."},{"no":11,"k":"고속버스","e":"express bus","s":"저는 고속버스를 좋아해요."},{"no":12,"k":"골목","e":"alley","s":"저는 골목에 가요."},{"no":13,"k":"교통","e":"traffic","s":"저는 교통을 좋아해요."},{"no":14,"k":"교통사고","e":"traffic accident","s":"저는 교통사고를 좋아해요."},{"no":15,"k":"기사","e":"article, driver, engineer","s":"제 기사가 있어요."},{"no":16,"k":"기차","e":"train","s":"저는 기차를 좋아해요."},{"no":17,"k":"길","e":"way, road","s":"저는 길에 가요."},{"no":18,"k":"나가다","e":"go out, get out","s":"밖에 나가요."},{"no":19,"k":"나오다","e":"come out, appear","s":"영화에 유명한 배우가 나와요."},{"no":20,"k":"나타나다","e":"appear","s":"저는 나타나요."},{"no":21,"k":"내려가다","e":"go down","s":"계단으로 내려가요."},{"no":22,"k":"내려오다","e":"come down","s":"저는 내려와요."},{"no":23,"k":"내리다","e":"go down","s":"다음 역에서 내려요."},{"no":24,"k":"다녀오다","e":"return, come back","s":"저는 다녀와요."},{"no":25,"k":"다니다","e":"go, commute","s":"저는 다여요."},{"no":26,"k":"다음해","e":"next year, following year","s":"저는 다음해를 좋아해요."},{"no":27,"k":"달리다","e":"run","s":"매일 아침 달려요."},{"no":28,"k":"데리다","e":"bring, take along","s":"저는 데여요."},{"no":29,"k":"도로","e":"road","s":"저는 도로에 가요."},{"no":30,"k":"도착","e":"arrival","s":"저는 도착을 좋아해요."},{"no":31,"k":"도착하다","e":"arrive","s":"공항에 도착해요."},{"no":32,"k":"돌아가다","e":"return, go back","s":"집에 돌아가요."},{"no":33,"k":"돌아오다","e":"come back, come home","s":"여행에서 돌아와요."},{"no":34,"k":"들어가다","e":"go in, enter","s":"저는 들어가요."},{"no":35,"k":"들어오다","e":"come in, enter","s":"집에 들어와요."},{"no":36,"k":"따라가다","e":"follow","s":"저는 따라가요."},{"no":37,"k":"따라오다","e":"come with, follow","s":"저는 따라와요."},{"no":38,"k":"따르다","e":"follow","s":"저는 딸라요."},{"no":39,"k":"떠나다","e":"leave","s":"내일 한국을 떠나요."},{"no":40,"k":"뛰다","e":"run","s":"운동장에서 뛰어요."},{"no":41,"k":"맞은편","e":"across, the other side, opposite","s":"저는 맞은편을 좋아해요."},{"no":42,"k":"메다","e":"shoulder, carry","s":"저는 메어요."},{"no":43,"k":"바쁘다","e":"busy","s":"요즘 바빠요."},{"no":44,"k":"방송","e":"broadcast","s":"저는 방송에 가요."},{"no":45,"k":"방송국","e":"broadcast stations","s":"저는 방송국에 가요."},{"no":46,"k":"버스","e":"bus","s":"저는 버스를 좋아해요."},{"no":47,"k":"비행기","e":"airplane","s":"저는 비행기를 좋아해요."},{"no":48,"k":"비행장","e":"airfield, airport","s":"저는 비행장에 가요."},{"no":49,"k":"사거리","e":"intersection, four corners","s":"저는 사거리를 좋아해요."},{"no":50,"k":"사고","e":"accident","s":"저는 사고를 좋아해요."},{"no":51,"k":"삼거리","e":"intersection, three-way intersection","s":"저는 삼거리를 좋아해요."},{"no":52,"k":"역","e":"station","s":"저는 역에 가요."},{"no":53,"k":"열차","e":"train","s":"저는 열차를 좋아해요."},{"no":54,"k":"엽서","e":"postcard","s":"저는 엽서를 좋아해요."},{"no":55,"k":"오다","e":"come","s":"친구가 집에 와요."},{"no":56,"k":"올라가다","e":"go up","s":"산에 올라가요."},{"no":57,"k":"올라오다","e":"come up","s":"저는 올라와요."},{"no":58,"k":"올려놓다","e":"put on, place","s":"저는 올려놓아요."},{"no":59,"k":"옮기다","e":"move, transfer, translate","s":"저는 옮여요."},{"no":60,"k":"운전하다","e":"drive","s":"저는 운전해요."},{"no":61,"k":"자동차","e":"car, automobile","s":"저는 자동차를 좋아해요."},{"no":62,"k":"자전거","e":"bicycle","s":"저는 자전거를 좋아해요."},{"no":63,"k":"전기자동차","e":"electric car","s":"저는 전기자동차를 좋아해요."},{"no":64,"k":"정거장","e":"station, depot","s":"저는 정거장에 가요."},{"no":65,"k":"정류장","e":"station, bus stop","s":"저는 정류장에 가요."},{"no":66,"k":"조심하다","e":"be careful, warn","s":"저는 조심해요."},{"no":67,"k":"지하","e":"underground","s":"저는 지하를 좋아해요."},{"no":68,"k":"지하도","e":"underpass","s":"저는 지하도를 좋아해요."},{"no":69,"k":"지하철","e":"subway","s":"저는 지하철을 좋아해요."},{"no":70,"k":"지하철역","e":"subway station","s":"저는 지하철역에 가요."},{"no":71,"k":"출발","e":"start, departure","s":"저는 출발을 좋아해요."},{"no":72,"k":"출발하다","e":"depart","s":"아침 일찍 출발해요."},{"no":73,"k":"타다","e":"ride, get on","s":"지하철을 타요."},{"no":74,"k":"택시","e":"taxi","s":"저는 택시를 좋아해요."},{"no":75,"k":"터미널","e":"terminal","s":"저는 터미널을 좋아해요."},{"no":76,"k":"횡단보도","e":"crosswalk","s":"저는 횡단보도를 좋아해요."}]},{"id":12,"ko":"여행 & 장소","en":"Travel & Places","color":"#FF7F50","short":"Travel","words":[{"no":1,"k":"건물","e":"building","s":"저는 건물에 가요."},{"no":2,"k":"경기장","e":"stadium, arena","s":"저는 경기장에 가요."},{"no":3,"k":"경복궁","e":"Gyeongbokgung","s":"저는 경복궁을 좋아해요."},{"no":4,"k":"경주","e":"Gyeongju","s":"저는 경주를 좋아해요."},{"no":5,"k":"경치","e":"view, landscape","s":"산의 경치가 아름다워요."},{"no":6,"k":"고향","e":"hometown","s":"저는 고향에 가요."},{"no":7,"k":"곳","e":"place","s":"저는 곳에 가요."},{"no":8,"k":"공간","e":"space","s":"저는 공간을 좋아해요."},{"no":9,"k":"공원","e":"park","s":"저는 공원에 가요."},{"no":10,"k":"공항","e":"airport","s":"저는 공항에 가요."},{"no":11,"k":"관광하다","e":"travel, sightsee","s":"저는 관광해요."},{"no":12,"k":"교회","e":"church","s":"저는 교회에 가요."},{"no":13,"k":"구경하다","e":"take a look","s":"저는 구경해요."},{"no":14,"k":"국내","e":"domestic","s":"저는 국내를 좋아해요."},{"no":15,"k":"국립","e":"nationalestablished, state","s":"저는 국립을 좋아해요."},{"no":16,"k":"국적","e":"nationality, country of citizenship","s":"저는 국적에 가요."},{"no":17,"k":"국제","e":"international","s":"저는 국제를 좋아해요."},{"no":18,"k":"극장","e":"theater, cinema","s":"저는 극장에 가요."},{"no":19,"k":"김포공항","e":"Gimpo International Airport","s":"저는 김포공항에 가요."},{"no":20,"k":"나라","e":"country","s":"저는 나라에 가요."},{"no":21,"k":"남대문시장","e":"Namdaemun market","s":"저는 남대문시장에 가요."},{"no":22,"k":"남미","e":"South America","s":"남미 시간이 있어요."},{"no":23,"k":"뉴욕","e":"New York","s":"저는 뉴욕을 좋아해요."},{"no":24,"k":"대사관","e":"embassy","s":"저는 대사관을 좋아해요."},{"no":25,"k":"대한민국","e":"Republic of Korea, South Korea","s":"대한민국 시간이 있어요."},{"no":26,"k":"도서관","e":"library","s":"저는 도서관에 가요."},{"no":27,"k":"도시","e":"city","s":"저는 도시에 가요."},{"no":28,"k":"도쿄","e":"Tokyo","s":"저는 도쿄를 좋아해요."},{"no":29,"k":"독일","e":"Germany","s":"제 독일이 있어요."},{"no":30,"k":"동네","e":"town, neighborhood","s":"저는 동네에 가요."},{"no":31,"k":"동대문시장","e":"Dongdaemun market","s":"저는 동대문시장에 가요."},{"no":32,"k":"동양","e":"eastern, orient","s":"저는 동양을 좋아해요."},{"no":33,"k":"러시아","e":"Russia","s":"저는 러시아를 좋아해요."},{"no":34,"k":"멕시코","e":"Mexico","s":"저는 멕시코를 좋아해요."},{"no":35,"k":"몽골","e":"Mongolia","s":"저는 몽골을 좋아해요."},{"no":36,"k":"문화","e":"culture","s":"저는 문화를 좋아해요."},{"no":37,"k":"미국","e":"The United States","s":"저는 미국을 좋아해요."},{"no":38,"k":"미술관","e":"art gallery, art museum","s":"저는 미술관에 가요."},{"no":39,"k":"민속촌","e":"folk village","s":"저는 민속촌에 가요."},{"no":40,"k":"박물관","e":"museum","s":"저는 박물관에 가요."},{"no":41,"k":"베이징","e":"Beijing","s":"저는 베이징을 좋아해요."},{"no":42,"k":"베트남","e":"Vietnam","s":"저는 베트남을 좋아해요."},{"no":43,"k":"부산","e":"Busan","s":"저는 부산을 좋아해요."},{"no":44,"k":"브라질","e":"Brazil","s":"저는 브라질을 좋아해요."},{"no":45,"k":"빌딩","e":"building","s":"저는 빌딩에 가요."},{"no":46,"k":"서양","e":"western, west","s":"저는 서양을 좋아해요."},{"no":47,"k":"서울","e":"Seoul","s":"저는 서울을 좋아해요."},{"no":48,"k":"서울역","e":"Seoul station","s":"저는 서울역에 가요."},{"no":49,"k":"설악산","e":"Mt. Seorak","s":"저는 설악산을 좋아해요."},{"no":50,"k":"섬","e":"island","s":"저는 섬을 좋아해요."},{"no":51,"k":"센터","e":"center","s":"저는 센터에 가요."},{"no":52,"k":"소풍","e":"picnic, trip","s":"저는 소풍을 좋아해요."},{"no":53,"k":"수도","e":"capital, water supply","s":"저는 수도를 먹어요."},{"no":54,"k":"시골","e":"countryside","s":"저는 시골에 가요."},{"no":55,"k":"시내","e":"downtown, city, stream","s":"저는 시내에 가요."},{"no":56,"k":"시설","e":"facility","s":"저는 시설을 좋아해요."},{"no":57,"k":"시외","e":"suburbs","s":"저는 시외를 좋아해요."},{"no":58,"k":"시청","e":"city hall","s":"저는 시청에 가요."},{"no":59,"k":"아시아","e":"Asia","s":"저는 아시아를 좋아해요."},{"no":60,"k":"아프리카","e":"Africa","s":"저는 아프리카를 좋아해요."},{"no":61,"k":"안내하다","e":"guide, invite","s":"저는 안내해요."},{"no":62,"k":"여권","e":"passport","s":"저는 여권을 좋아해요."},{"no":63,"k":"여행","e":"travel","s":"저는 여행을 좋아해요."},{"no":64,"k":"여행사","e":"travel agency, travel firm","s":"저는 여행사를 좋아해요."},{"no":65,"k":"영국","e":"The United Kingdom","s":"저는 영국을 좋아해요."},{"no":66,"k":"예약","e":"reservation","s":"저는 예약을 좋아해요."},{"no":67,"k":"외국","e":"foreign country","s":"저는 외국에 가요."},{"no":68,"k":"요르단","e":"Jordan","s":"저는 요르단을 좋아해요."},{"no":69,"k":"우리나라","e":"our country, South Korea","s":"저는 우리나라에 가요."},{"no":70,"k":"우체국","e":"post office","s":"저는 우체국에 가요."},{"no":71,"k":"유럽","e":"Europe","s":"저는 유럽을 좋아해요."},{"no":72,"k":"유학","e":"study abroad","s":"저는 유학에 가요."},{"no":73,"k":"유학생","e":"foreign student, international student","s":"제 유학생이 있어요."},{"no":74,"k":"이집트","e":"Egypt","s":"저는 이집트를 좋아해요."},{"no":75,"k":"인도","e":"India","s":"저는 인도를 좋아해요."},{"no":76,"k":"인천","e":"Incheon","s":"저는 인천을 좋아해요."},{"no":77,"k":"일본","e":"Japan","s":"저는 일본을 좋아해요."},{"no":78,"k":"일본드라마","e":"Japanese drama","s":"저는 일본드라마를 좋아해요."},{"no":79,"k":"일본말","e":"Japanese language","s":"저는 일본말을 좋아해요."},{"no":80,"k":"일본사람","e":"Japanese people","s":"제 일본사람이 있어요."},{"no":81,"k":"일본어","e":"Japanese language","s":"저는 일본어를 좋아해요."},{"no":82,"k":"일본요리","e":"Japanese food","s":"저는 일본요리를 먹어요."},{"no":83,"k":"일식","e":"Japanese style, Japanese food","s":"저는 일식을 먹어요."},{"no":84,"k":"장소","e":"place","s":"저는 장소에 가요."},{"no":85,"k":"절","e":"~ section(s), temple","s":"저는 절에 가요."},{"no":86,"k":"제주도","e":"Jeju Island","s":"저는 제주도를 좋아해요."},{"no":87,"k":"조선","e":"shipbuilding, Korea","s":"저는 조선에 가요."},{"no":88,"k":"조선말","e":"Korean language","s":"저는 조선말을 좋아해요."},{"no":89,"k":"조선어","e":"Korean language","s":"저는 조선어를 좋아해요."},{"no":90,"k":"종로","e":"Jong-ro","s":"저는 종로를 좋아해요."},{"no":91,"k":"주차장","e":"parking lot","s":"저는 주차장에 가요."},{"no":92,"k":"주차하다","e":"park","s":"저는 주차해요."},{"no":93,"k":"중국","e":"China","s":"저는 중국을 좋아해요."},{"no":94,"k":"중심","e":"center","s":"저는 중심에 가요."},{"no":95,"k":"지도","e":"map","s":"저는 지도를 좋아해요."},{"no":96,"k":"지방","e":"fat, region","s":"저는 지방을 좋아해요."},{"no":97,"k":"짐","e":"load, baggage","s":"저는 짐을 좋아해요."},{"no":98,"k":"찾아가다","e":"go to visit","s":"저는 찾아가요."},{"no":99,"k":"찾아오다","e":"come to visit","s":"저는 찾아와요."},{"no":100,"k":"추석","e":"Chusoku (Korean Thanksgiving Day)","s":"추석 시간이 있어요."},{"no":101,"k":"캐나다","e":"Canada","s":"저는 캐나요."},{"no":102,"k":"태국","e":"Thailand","s":"저는 태국을 좋아해요."},{"no":103,"k":"평양","e":"Pyongyang","s":"저는 평양을 좋아해요."},{"no":104,"k":"프랑스","e":"France","s":"저는 프랑스를 좋아해요."},{"no":105,"k":"한강","e":"Han River, Hangang","s":"저는 한강을 좋아해요."},{"no":106,"k":"한국","e":"Korea","s":"저는 한국을 좋아해요."},{"no":107,"k":"한국드라마","e":"Korean drama","s":"저는 한국드라마를 좋아해요."},{"no":108,"k":"한국말","e":"Korean language","s":"저는 한국말을 좋아해요."},{"no":109,"k":"한국사람","e":"Korean people","s":"제 한국사람이 있어요."},{"no":110,"k":"한국요리","e":"Korean cuisine","s":"저는 한국요리를 좋아해요."},{"no":111,"k":"한식","e":"Korean cuisine","s":"저는 한식을 좋아해요."},{"no":112,"k":"해외","e":"overseas","s":"저는 해외를 좋아해요."},{"no":113,"k":"해외여행","e":"overseas trip","s":"저는 해외여행을 좋아해요."},{"no":114,"k":"호주","e":"Australia","s":"저는 호주를 좋아해요."},{"no":115,"k":"호텔","e":"hotel","s":"저는 호텔에 가요."}]},{"id":13,"ko":"건강 & 병원","en":"Health & Medical","color":"#FF69B4","short":"Health","words":[{"no":1,"k":"감기","e":"cold","s":"저는 감기를 좋아해요."},{"no":2,"k":"감기약","e":"cold medicine","s":"저는 감기약을 좋아해요."},{"no":3,"k":"건강","e":"health","s":"저는 건강을 좋아해요."},{"no":4,"k":"건강하다","e":"be healthy","s":"저는 건강해요."},{"no":5,"k":"고프다","e":"hungry","s":"이것이 고써요."},{"no":6,"k":"금연","e":"no smoking","s":"저는 금연을 좋아해요."},{"no":7,"k":"금주","e":"abstinence, temperance","s":"저는 금주를 좋아해요."},{"no":8,"k":"기침","e":"cough","s":"저는 기침을 좋아해요."},{"no":9,"k":"내과","e":"internal medicine","s":"저는 내과를 좋아해요."},{"no":10,"k":"다이어트","e":"diet","s":"저는 다이어트를 좋아해요."},{"no":11,"k":"다치다","e":"hurt","s":"저는 다여요."},{"no":12,"k":"담배","e":"tobacco","s":"저는 담배를 좋아해요."},{"no":13,"k":"몸살","e":"sickness, disease that comes from fatigue","s":"저는 몸살을 좋아해요."},{"no":14,"k":"배부르다","e":"be full (I am full.)","s":"많이 먹어서 배불러요."},{"no":15,"k":"배탈","e":"stomachache","s":"저는 배탈을 좋아해요."},{"no":16,"k":"병원","e":"hospital","s":"저는 병원에 가요."},{"no":17,"k":"상처","e":"wound, scratch","s":"저는 상처를 좋아해요."},{"no":18,"k":"소화제","e":"peptic, digestive","s":"저는 소화제를 좋아해요."},{"no":19,"k":"수술하다","e":"operate on for","s":"저는 수술해요."},{"no":20,"k":"스트레스","e":"stress","s":"저는 스트레스를 좋아해요."},{"no":21,"k":"아프다","e":"painful, sick","s":"머리가 아파요."},{"no":22,"k":"안전하다","e":"safe","s":"저는 안전해요."},{"no":23,"k":"약","e":"about, medicine","s":"저는 약을 좋아해요."},{"no":24,"k":"위험하다","e":"dangerous","s":"저는 위험해요."},{"no":25,"k":"입원하다","e":"hospitalize","s":"저는 입원해요."},{"no":26,"k":"주사","e":"injection","s":"저는 주사를 좋아해요."},{"no":27,"k":"죽다","e":"die","s":"저는 죽어요."},{"no":28,"k":"증","e":"symptom, medical condition","s":""},{"no":29,"k":"치과","e":"dentist, dentistry","s":"저는 치과를 좋아해요."},{"no":30,"k":"치료하다","e":"treat","s":"저는 치료해요."},{"no":31,"k":"치약","e":"toothpaste","s":"치약 시간이 있어요."},{"no":32,"k":"칫솔","e":"toothbrush","s":"칫솔 시간이 있어요."},{"no":33,"k":"코피","e":"nosebleed","s":"저는 코피를 좋아해요."},{"no":34,"k":"콧물","e":"snot, nasal discharge","s":"저는 콧물을 좋아해요."},{"no":35,"k":"피","e":"blood","s":"저는 피를 좋아해요."},{"no":36,"k":"피곤하다","e":"tired","s":"오늘 피곤해요."},{"no":37,"k":"환자","e":"patient","s":"저는 환자를 좋아해요."}]},{"id":14,"ko":"날씨 & 계절","en":"Weather & Seasons","color":"#1F78B4","short":"Weather","words":[{"no":1,"k":"가을","e":"autumn, fall","s":"가을 시간이 있어요."},{"no":2,"k":"겨울","e":"winter","s":"저는 겨울을 좋아해요."},{"no":3,"k":"겨울방학","e":"winter vacation","s":"저는 겨울방학을 좋아해요."},{"no":4,"k":"계절","e":"season","s":"제 계절이 있어요."},{"no":5,"k":"구름","e":"cloud","s":"저는 구름을 좋아해요."},{"no":6,"k":"기온","e":"temperature","s":"저는 기온을 좋아해요."},{"no":7,"k":"끼다","e":"put on, plug, (fog) rolls in","s":"저는 여요."},{"no":8,"k":"날씨","e":"weather","s":"오늘 날씨가 맑아요."},{"no":9,"k":"눈사람","e":"snowman","s":"제 눈사람이 있어요."},{"no":10,"k":"눈싸움","e":"staring contest, snowball fight","s":"눈싸움 시간이 있어요."},{"no":11,"k":"덥다","e":"hot","s":"여름에 더워요."},{"no":12,"k":"따뜻하다","e":"warm","s":"봄 날씨가 따뜻해요."},{"no":13,"k":"맑다","e":"clear, clean","s":"이것이 맑아요."},{"no":14,"k":"바람","e":"wind","s":"저는 바람을 좋아해요."},{"no":15,"k":"방학","e":"vacation","s":"저는 방학을 좋아해요."},{"no":16,"k":"벚꽃","e":"cherry blossom","s":"벚꽃 시간이 있어요."},{"no":17,"k":"봄","e":"spring","s":"저는 봄을 좋아해요."},{"no":18,"k":"불다","e":"blow (wind or whistle, musical instruments, etc.)","s":"저는 불어요."},{"no":19,"k":"비","e":"rain","s":"저는 비를 좋아해요."},{"no":20,"k":"사계절","e":"four seasons","s":"제 사계절이 있어요."},{"no":21,"k":"시원하다","e":"cool, refresh","s":"물이 시원해요."},{"no":22,"k":"여름","e":"summer","s":"저는 여름을 좋아해요."},{"no":23,"k":"영하","e":"minus, below zero","s":"저는 영하를 좋아해요."},{"no":24,"k":"우산","e":"umbrella","s":"저는 우산을 좋아해요."},{"no":25,"k":"일기예보","e":"weather forecast","s":"저는 일기예보를 먹어요."},{"no":26,"k":"장마","e":"rainy season","s":"제 장마가 있어요."},{"no":27,"k":"장마철","e":"rainy season","s":"제 장마철이 있어요."},{"no":28,"k":"찍다","e":"pierce, take (a photo), press","s":"저는 찍어요."},{"no":29,"k":"춥다","e":"cold","s":"겨울에 추워요."},{"no":30,"k":"태풍","e":"typhoon","s":"저는 태풍을 좋아해요."},{"no":31,"k":"햇빛","e":"sunshine, sunlight","s":"저는 햇빛을 좋아해요."},{"no":32,"k":"흐리다","e":"cloudy","s":"저는 흐여요."}]},{"id":15,"ko":"자연 & 환경","en":"Nature & Environment","color":"#33A02C","short":"Nature","words":[{"no":1,"k":"가지","e":"branch","s":"저는 가지를 좋아해요."},{"no":2,"k":"강","e":"river","s":"저는 강을 좋아해요."},{"no":3,"k":"강아지","e":"puppy","s":"저는 강아지를 좋아해요."},{"no":4,"k":"개나리","e":"forsythia","s":"저는 개나리를 좋아해요."},{"no":5,"k":"거리","e":"street","s":"저는 거리에 가요."},{"no":6,"k":"고양이","e":"cat","s":"저는 고양이를 좋아해요."},{"no":7,"k":"공기","e":"air","s":"저는 공기를 좋아해요."},{"no":8,"k":"기르다","e":"cultivate, grow","s":"저는 길러요."},{"no":9,"k":"깜짝","e":"startled, surprised","s":"저는 깜짝을 좋아해요."},{"no":10,"k":"꽃","e":"flower","s":"저는 꽃을 좋아해요."},{"no":11,"k":"나무","e":"tree","s":"저는 나무를 좋아해요."},{"no":12,"k":"동물","e":"animal","s":"저는 동물을 좋아해요."},{"no":13,"k":"돼지","e":"pig","s":"저는 돼지를 좋아해요."},{"no":14,"k":"들","e":"field, ~s,","s":"저는 들을 좋아해요."},{"no":15,"k":"무궁화","e":"rose of sharon","s":"저는 무궁화를 좋아해요."},{"no":16,"k":"바다","e":"sea","s":"저는 바요."},{"no":17,"k":"바닷가","e":"beach","s":"저는 바닷가에 가요."},{"no":18,"k":"별","e":"star","s":"저는 별을 좋아해요."},{"no":19,"k":"산","e":"mountain","s":"저는 산에 가요."},{"no":20,"k":"소","e":"small, cow","s":"소 시간이 있어요."},{"no":21,"k":"송이","e":"bunch, flower, cluster","s":"저는 송이를 좋아해요."},{"no":22,"k":"오르다","e":"climb","s":"저는 올라요."},{"no":23,"k":"오리","e":"duck","s":"저는 오리를 좋아해요."},{"no":24,"k":"자연","e":"nature","s":"저는 자연을 좋아해요."},{"no":25,"k":"장미","e":"rose","s":"저는 장미를 좋아해요."},{"no":26,"k":"진달래","e":"azalea","s":"저는 진달래를 좋아해요."},{"no":27,"k":"풀","e":"pool, grass","s":"저는 풀에 가요."},{"no":28,"k":"피다","e":"bloom","s":"저는 여요."},{"no":29,"k":"하늘","e":"sky","s":"저는 하늘을 좋아해요."},{"no":30,"k":"해","e":"year, sun","s":"저는 해를 좋아해요."},{"no":31,"k":"호랑이","e":"tiger","s":"저는 호랑이를 좋아해요."}]},{"id":16,"ko":"시간 & 날짜","en":"Time & Dates","color":"#6A3D9A","short":"Time","words":[{"no":1,"k":"가끔","e":"sometimes","s":"저는 가끔 공원에 가요."},{"no":2,"k":"간","e":"while","s":"잠깐 기다리는 간에 전화했어요."},{"no":3,"k":"걸리다","e":"get caught, take (time)","s":"저는 걸여요."},{"no":4,"k":"계속","e":"continue","s":"저는 계속을 좋아해요."},{"no":5,"k":"곧","e":"soon","s":"곧 점심시간이에요."},{"no":6,"k":"공휴일","e":"public holiday","s":"저는 공휴일을 좋아해요."},{"no":7,"k":"과거","e":"past","s":"저는 과거를 좋아해요."},{"no":8,"k":"구월","e":"September","s":"저는 구월을 좋아해요."},{"no":9,"k":"그날","e":"that day","s":"저는 그날을 좋아해요."},{"no":10,"k":"그동안","e":"meantime, meanwhile, up to now","s":"그동안 시간이 있어요."},{"no":11,"k":"그저께","e":"day before yesterday","s":"저는 그저께를 좋아해요."},{"no":12,"k":"금방","e":"soon, a little while ago","s":"금방 시간이 있어요."},{"no":13,"k":"금요일","e":"Friday","s":"저는 금요일을 좋아해요."},{"no":14,"k":"나중","e":"later, after","s":"저는 나중을 좋아해요."},{"no":15,"k":"나흘","e":"four days","s":"저는 나흘을 좋아해요."},{"no":16,"k":"날","e":"day","s":"저는 날을 좋아해요."},{"no":17,"k":"날짜","e":"date","s":"저는 날짜를 좋아해요."},{"no":18,"k":"낮","e":"day, noon, during the day","s":"저는 낮을 좋아해요."},{"no":19,"k":"내년","e":"next year","s":"저는 내년을 좋아해요."},{"no":20,"k":"내일","e":"tomorrow","s":"저는 내일을 좋아해요."},{"no":21,"k":"년","e":"year","s":"올해 2학년이에요."},{"no":22,"k":"다음달","e":"next month","s":"저는 다음달을 좋아해요."},{"no":23,"k":"다음주","e":"next week","s":"저는 다음주를 좋아해요."},{"no":24,"k":"달","e":"month, moon","s":"다음 달에 여행을 가요."},{"no":25,"k":"달력","e":"calendar","s":"저는 달력을 좋아해요."},{"no":26,"k":"동안","e":"during, between","s":"저는 동안을 좋아해요."},{"no":27,"k":"때","e":"time","s":"저는 때를 좋아해요."},{"no":28,"k":"마지막","e":"last","s":"저는 마지막을 좋아해요."},{"no":29,"k":"매일","e":"everyday","s":"저는 매일 운동해요."},{"no":30,"k":"매주","e":"every week","s":"매주 시간이 있어요."},{"no":31,"k":"먼저","e":"first, first of all, before","s":"먼저 손을 씻어요."},{"no":32,"k":"며칠","e":"a few days, what date","s":"저는 며칠을 좋아해요."},{"no":33,"k":"명절","e":"holidays, annual events","s":"명절 시간이 있어요."},{"no":34,"k":"모레","e":"the day after tomorrow","s":"저는 모레를 좋아해요."},{"no":35,"k":"목요일","e":"Thursday","s":"저는 목요일을 좋아해요."},{"no":36,"k":"미래","e":"future","s":"저는 미래를 좋아해요."},{"no":37,"k":"반년","e":"half a year","s":"저는 반년을 좋아해요."},{"no":38,"k":"반달","e":"half-moon","s":"저는 반달을 좋아해요."},{"no":39,"k":"밤","e":"night","s":"저는 밤을 좋아해요."},{"no":40,"k":"벌써","e":"already","s":"벌써 열 시예요."},{"no":41,"k":"사월","e":"April","s":"저는 사월을 좋아해요."},{"no":42,"k":"사흘","e":"3 days","s":"저는 사흘을 좋아해요."},{"no":43,"k":"삼월","e":"March","s":"저는 삼월을 좋아해요."},{"no":44,"k":"새벽","e":"dawn, late at night, early morning","s":"저는 새벽을 좋아해요."},{"no":45,"k":"생신","e":"birthday (honorific form)","s":"저는 생신을 좋아해요."},{"no":46,"k":"생일","e":"birthday","s":"저는 생일을 좋아해요."},{"no":47,"k":"설날","e":"Lunar New Year","s":"저는 설날을 좋아해요."},{"no":48,"k":"수요일","e":"Wednesday","s":"저는 수요일을 좋아해요."},{"no":49,"k":"시","e":"city, time","s":"저는 시에 가요."},{"no":50,"k":"시간","e":"time","s":"시간이 없어요. 빨리 가요."},{"no":51,"k":"시간표","e":"schedule, timetable","s":"저는 시간표를 좋아해요."},{"no":52,"k":"시계","e":"clock","s":"저는 시계를 좋아해요."},{"no":53,"k":"시월","e":"October","s":"저는 시월을 좋아해요."},{"no":54,"k":"십이월","e":"December","s":"저는 십이월을 좋아해요."},{"no":55,"k":"십일월","e":"November","s":"저는 십일월을 좋아해요."},{"no":56,"k":"아까","e":"earlier, while ago","s":"저는 아까를 좋아해요."},{"no":57,"k":"아직","e":"yet, still","s":"아직 준비가 안 됐어요."},{"no":58,"k":"어저께","e":"yesterday","s":"저는 어저께를 좋아해요."},{"no":59,"k":"어제","e":"yesterday","s":"저는 어제를 좋아해요."},{"no":60,"k":"어젯밤","e":"last night","s":"저는 어젯밤을 좋아해요."},{"no":61,"k":"언제나","e":"always, anytime","s":"언제나 시간이 있어요."},{"no":62,"k":"연휴","e":"consecutive holidays","s":"저는 연휴를 좋아해요."},{"no":63,"k":"옛날","e":"a long ago, olden days","s":"저는 옛날을 좋아해요."},{"no":64,"k":"오늘","e":"today","s":"저는 오늘을 좋아해요."},{"no":65,"k":"오래","e":"long, much","s":"저는 오래를 좋아해요."},{"no":66,"k":"오랫동안","e":"for a long time","s":"저는 오랫동안을 좋아해요."},{"no":67,"k":"오월","e":"May","s":"저는 오월을 좋아해요."},{"no":68,"k":"오전","e":"morning, a.m.","s":"저는 오전을 좋아해요."},{"no":69,"k":"오후","e":"afternoon","s":"저는 오후를 좋아해요."},{"no":70,"k":"올해","e":"this year","s":"저는 올해를 좋아해요."},{"no":71,"k":"요일","e":"day of the week","s":"저는 요일을 좋아해요."},{"no":72,"k":"요즘","e":"nowadays, around this time, lately","s":"요즘 시간이 있어요."},{"no":73,"k":"월","e":"month","s":"저는 월을 좋아해요."},{"no":74,"k":"월","e":"monthly rent","s":"저는 월을 좋아해요."},{"no":75,"k":"월요일","e":"Monday","s":"저는 월요일을 좋아해요."},{"no":76,"k":"유월","e":"June","s":"저는 유월을 좋아해요."},{"no":77,"k":"이따가","e":"later","s":"저는 이따가를 좋아해요."},{"no":78,"k":"이번","e":"this time","s":"저는 이번을 좋아해요."},{"no":79,"k":"이월","e":"February","s":"저는 이월을 좋아해요."},{"no":80,"k":"이제","e":"now","s":"이제 시간이 있어요."},{"no":81,"k":"이틀","e":"two days","s":"저는 이틀을 좋아해요."},{"no":82,"k":"일","e":"work, 1, day","s":"저는 일을 좋아해요."},{"no":83,"k":"일상생활","e":"everyday life","s":"일상생활 시간이 있어요."},{"no":84,"k":"일요일","e":"Sunday","s":"저는 일요일을 좋아해요."},{"no":85,"k":"일월","e":"January","s":"저는 일월을 좋아해요."},{"no":86,"k":"일주일","e":"one week","s":"저는 일주일을 좋아해요."},{"no":87,"k":"일찍","e":"early","s":"오늘 일찍 일어났어요."},{"no":88,"k":"작년","e":"last year","s":"저는 작년을 좋아해요."},{"no":89,"k":"종일","e":"all day","s":"종일 시간이 있어요."},{"no":90,"k":"주","e":"week","s":"이번 주말에 만나요."},{"no":91,"k":"주말","e":"weekend","s":"저는 주말을 좋아해요."},{"no":92,"k":"지금","e":"now","s":"지금 어디 있어요?"},{"no":93,"k":"지난달","e":"last month","s":"저는 지난달을 좋아해요."},{"no":94,"k":"지난번","e":"last time","s":"저는 지난번을 좋아해요."},{"no":95,"k":"지난주","e":"last week","s":"저는 지난주를 좋아해요."},{"no":96,"k":"칠월","e":"July","s":"저는 칠월을 좋아해요."},{"no":97,"k":"크리스마스","e":"Christmas","s":"저는 크리스마스를 좋아해요."},{"no":98,"k":"토요일","e":"Saturday","s":"저는 토요일을 좋아해요."},{"no":99,"k":"팔월","e":"August","s":"저는 팔월을 좋아해요."},{"no":100,"k":"평일","e":"weekday","s":"저는 평일을 좋아해요."},{"no":101,"k":"하루","e":"one day","s":"저는 하루를 좋아해요."},{"no":102,"k":"현재","e":"now, current","s":"현재 시간이 있어요."},{"no":103,"k":"화요일","e":"Tuesday","s":"저는 화요일을 좋아해요."},{"no":104,"k":"후","e":"after","s":"식사 후에 산책해요."},{"no":105,"k":"휴가","e":"vacation, holiday","s":"저는 휴가를 좋아해요."},{"no":106,"k":"휴일","e":"holiday","s":"저는 휴일을 좋아해요."}]},{"id":17,"ko":"신체 & 외모","en":"Body & Appearance","color":"#E31A1C","short":"Body","words":[{"no":1,"k":"가슴","e":"chest, breast","s":"저는 가슴을 좋아해요."},{"no":2,"k":"감다","e":"close ~ (eyes)","s":"이것이 감아요."},{"no":3,"k":"곱다","e":"beautiful","s":"이것이 곱아요."},{"no":4,"k":"귀","e":"ear","s":"저는 귀를 좋아해요."},{"no":5,"k":"귀엽다","e":"cute","s":"강아지가 귀여워요."},{"no":6,"k":"깨지다","e":"chip, crack, break","s":"저는 깨여요."},{"no":7,"k":"눈","e":"eye, snow","s":"눈 시간이 있어요."},{"no":8,"k":"눈물","e":"tear","s":"저는 눈물을 먹어요."},{"no":9,"k":"다리","e":"bridge, leg, foot","s":"저는 다리를 좋아해요."},{"no":10,"k":"땀","e":"sweat","s":"저는 땀을 먹어요."},{"no":11,"k":"로션","e":"skin lotion","s":"저는 로션을 좋아해요."},{"no":12,"k":"머리","e":"head, hair","s":"저는 머리를 좋아해요."},{"no":13,"k":"멋있다","e":"cool, nice","s":"옷이 멋있어요."},{"no":14,"k":"면도","e":"razor, shaving","s":"저는 면도를 좋아해요."},{"no":15,"k":"목","e":"neck, throat","s":"저는 목을 좋아해요."},{"no":16,"k":"몸","e":"body","s":"저는 몸을 좋아해요."},{"no":17,"k":"무릎","e":"knee","s":"저는 무릎을 좋아해요."},{"no":18,"k":"미리","e":"in advance, beforehand","s":"저는 미리를 좋아해요."},{"no":19,"k":"발","e":"foot, leg","s":"저는 발을 좋아해요."},{"no":20,"k":"발가락","e":"toe(s)","s":"저는 발가락을 좋아해요."},{"no":21,"k":"배","e":"ship, stomach, pear","s":"저는 배를 좋아해요."},{"no":22,"k":"비누","e":"soap","s":"비누 시간이 있어요."},{"no":23,"k":"살","e":"flesh, ~ year(s) old","s":"저는 살을 좋아해요."},{"no":24,"k":"샴푸","e":"shampoo","s":"저는 샴푸를 좋아해요."},{"no":25,"k":"손","e":"hand","s":"저는 손을 좋아해요."},{"no":26,"k":"손가락","e":"finger","s":"저는 손가락을 좋아해요."},{"no":27,"k":"아름답다","e":"beautiful","s":"이것이 아름답아요."},{"no":28,"k":"어깨","e":"shoulder","s":"저는 어깨를 좋아해요."},{"no":29,"k":"얼굴","e":"face","s":"저는 얼굴을 좋아해요."},{"no":30,"k":"예쁘다","e":"pretty, beautiful","s":"꽃이 예뻐요."},{"no":31,"k":"입","e":"mouth","s":"저는 입을 좋아해요."},{"no":32,"k":"잘생기다","e":"handsome","s":"저는 잘생여요."},{"no":33,"k":"코","e":"nose","s":"저는 코를 좋아해요."},{"no":34,"k":"키","e":"key, height","s":"저는 키를 좋아해요."},{"no":35,"k":"허리","e":"waist, hip","s":"저는 허리를 좋아해요."},{"no":36,"k":"화장품","e":"cosmetics","s":"저는 화장품을 좋아해요."},{"no":37,"k":"화장하다","e":"makeup","s":"저는 화장해요."}]},{"id":18,"ko":"취미 & 스포츠","en":"Hobbies & Sports","color":"#FF7F00","short":"Hobbies","words":[{"no":1,"k":"게임","e":"game","s":"저는 게임을 좋아해요."},{"no":2,"k":"경기","e":"competition, game","s":"저는 경기를 좋아해요."},{"no":3,"k":"골프","e":"golf","s":"저는 골프를 좋아해요."},{"no":4,"k":"공","e":"ball","s":"공 시간이 있어요."},{"no":5,"k":"공연","e":"show, public performance","s":"제 공연이 있어요."},{"no":6,"k":"그리다","e":"draw","s":"저는 그여요."},{"no":7,"k":"그림","e":"drawing, picture","s":"저는 그림을 좋아해요."},{"no":8,"k":"낚시","e":"fishing","s":"저는 낚시를 먹어요."},{"no":9,"k":"노래","e":"song","s":"제 노래가 있어요."},{"no":10,"k":"노래방","e":"Karaoke shop","s":"저는 노래방에 가요."},{"no":11,"k":"노래하다","e":"sing","s":"저는 노래해요."},{"no":12,"k":"놀다","e":"play","s":"친구와 놀아요."},{"no":13,"k":"농구","e":"basketball","s":"농구 시간이 있어요."},{"no":14,"k":"뉴스","e":"news","s":"저는 뉴스를 좋아해요."},{"no":15,"k":"대회","e":"competition, tournament","s":"저는 대회를 좋아해요."},{"no":16,"k":"동아리","e":"club, group","s":"저는 동아리를 좋아해요."},{"no":17,"k":"드라마","e":"drama","s":"저는 드라마를 좋아해요."},{"no":18,"k":"등산","e":"hiking, mountain-climbing","s":"저는 등산에 가요."},{"no":19,"k":"디브이디","e":"DVD","s":"저는 디브이디를 좋아해요."},{"no":20,"k":"라디오","e":"radio","s":"저는 라디오를 좋아해요."},{"no":21,"k":"만화","e":"comic book, cartoon","s":"만화 시간이 있어요."},{"no":22,"k":"모이다","e":"gather, get together","s":"친구들이 모여요."},{"no":23,"k":"무용","e":"dance","s":"저는 무용을 좋아해요."},{"no":24,"k":"미술","e":"art","s":"저는 미술을 좋아해요."},{"no":25,"k":"바이올린","e":"violin","s":"저는 바이올린을 좋아해요."},{"no":26,"k":"배구","e":"volleyball","s":"배구 시간이 있어요."},{"no":27,"k":"부르다","e":"call, sing","s":"노래를 불러요."},{"no":28,"k":"비디오","e":"video","s":"저는 비디오를 좋아해요."},{"no":29,"k":"사진","e":"picture, photo","s":"저는 사진을 좋아해요."},{"no":30,"k":"사진기","e":"camera","s":"저는 사진기를 좋아해요."},{"no":31,"k":"산책","e":"walk","s":"저는 산책을 좋아해요."},{"no":32,"k":"소설","e":"novel","s":"저는 소설을 좋아해요."},{"no":33,"k":"소식","e":"news","s":"저는 소식을 좋아해요."},{"no":34,"k":"수영","e":"swimming","s":"저는 수영을 좋아해요."},{"no":35,"k":"수영장","e":"swimming pool","s":"저는 수영장에 가요."},{"no":36,"k":"스케이트","e":"skate","s":"저는 스케이트를 좋아해요."},{"no":37,"k":"스키","e":"ski, skiing","s":"저는 스키를 좋아해요."},{"no":38,"k":"스키장","e":"ski resort","s":"스키장 시간이 있어요."},{"no":39,"k":"스포츠","e":"sport","s":"저는 스포츠를 좋아해요."},{"no":40,"k":"시디","e":"CD","s":"저는 시디를 좋아해요."},{"no":41,"k":"신문","e":"newspaper","s":"저는 신문을 좋아해요."},{"no":42,"k":"악기","e":"musical instrument","s":"저는 악기를 좋아해요."},{"no":43,"k":"야구","e":"baseball","s":"야구 시간이 있어요."},{"no":44,"k":"영화","e":"movie","s":"저는 영화를 좋아해요."},{"no":45,"k":"영화관","e":"movie theater","s":"저는 영화관에 가요."},{"no":46,"k":"영화배우","e":"movie star","s":"저는 영화배우를 좋아해요."},{"no":47,"k":"영화표","e":"movie ticket","s":"저는 영화표를 좋아해요."},{"no":48,"k":"올림픽","e":"olympic","s":"저는 올림픽을 좋아해요."},{"no":49,"k":"운동","e":"exercise","s":"저는 운동을 좋아해요."},{"no":50,"k":"운동선수","e":"athlete","s":"저는 운동선수를 좋아해요."},{"no":51,"k":"운동장","e":"playground, athletic field","s":"저는 운동장을 좋아해요."},{"no":52,"k":"운동하다","e":"exercise","s":"아침에 운동해요."},{"no":53,"k":"월드컵","e":"world cup","s":"저는 월드컵을 좋아해요."},{"no":54,"k":"음반","e":"record","s":"저는 음반을 좋아해요."},{"no":55,"k":"음악","e":"music","s":"저는 음악을 좋아해요."},{"no":56,"k":"잡지","e":"magazine","s":"저는 잡지를 좋아해요."},{"no":57,"k":"촬영하다","e":"take a picture","s":"저는 촬영해요."},{"no":58,"k":"추다","e":"dance","s":"저는 워요."},{"no":59,"k":"축구","e":"football, soccer","s":"축구 시간이 있어요."},{"no":60,"k":"축제","e":"festival","s":"저는 축제를 좋아해요."},{"no":61,"k":"춤","e":"dance","s":"저는 춤을 좋아해요."},{"no":62,"k":"춤추다","e":"dance","s":"저는 춤워요."},{"no":63,"k":"취미","e":"hobby","s":"저는 취미를 좋아해요."},{"no":64,"k":"카메라","e":"camera","s":"저는 카메라를 좋아해요."},{"no":65,"k":"콧노래","e":"humming","s":"저는 콧노래를 좋아해요."},{"no":66,"k":"탁구","e":"table tennis","s":"저는 탁구를 좋아해요."},{"no":67,"k":"태권도","e":"Taekwondo","s":"저는 태권도를 좋아해요."},{"no":68,"k":"테니스","e":"tennis","s":"저는 테니스를 좋아해요."},{"no":69,"k":"프로그램","e":"program","s":"저는 프로그램을 좋아해요."},{"no":70,"k":"피아노","e":"piano","s":"저는 피아노를 좋아해요."},{"no":71,"k":"필름","e":"film","s":"저는 필름을 좋아해요."}]},{"id":19,"ko":"감정 & 성격","en":"Emotions & Personality","color":"#FB9A99","short":"Emotions","words":[{"no":1,"k":"감동","e":"sensation","s":"저는 감동을 좋아해요."},{"no":2,"k":"감동하다","e":"be impressed","s":"저는 감동해요."},{"no":3,"k":"거짓말","e":"lie","s":"저는 거짓말을 좋아해요."},{"no":4,"k":"걱정","e":"anxiety, concern","s":"저는 걱정을 좋아해요."},{"no":5,"k":"걱정하다","e":"worry","s":"시험이 걱정돼요."},{"no":6,"k":"경험","e":"experience","s":"여행 경험이 많아요."},{"no":7,"k":"관심","e":"attention, interest","s":"한국 문화에 관심이 있어요."},{"no":8,"k":"기분","e":"feeling","s":"오늘 기분이 좋아요."},{"no":9,"k":"기뻐하다","e":"glad, delight","s":"저는 기뻐해요."},{"no":10,"k":"기쁘다","e":"happy","s":"선물을 받아서 기뻐요."},{"no":11,"k":"기억하다","e":"remember","s":"그날을 기억해요."},{"no":12,"k":"긴장되다","e":"be nervous","s":"이것이 긴장되어요."},{"no":13,"k":"꾸다","e":"dream","s":"저는 워요."},{"no":14,"k":"꿈","e":"dream","s":"저는 꿈을 좋아해요."},{"no":15,"k":"나빠지다","e":"spoil, deteriorate","s":"저는 나빠여요."},{"no":16,"k":"나쁘다","e":"bad","s":"날씨가 나빠요."},{"no":17,"k":"놀라다","e":"be surprised","s":"이것이 놀라요."},{"no":18,"k":"느끼다","e":"feel","s":"저는 느여요."},{"no":19,"k":"느낌","e":"feeling","s":"저는 느낌을 좋아해요."},{"no":20,"k":"단점","e":"disadvantage, shortcoming, drawback","s":"저는 단점을 좋아해요."},{"no":21,"k":"마음","e":"mind, feeling","s":"저는 마음을 좋아해요."},{"no":22,"k":"무섭다","e":"scary","s":"저는 무서워요."},{"no":23,"k":"바라다","e":"hope","s":"저는 바라요."},{"no":24,"k":"부드럽다","e":"soft, friendly","s":"이것이 부드러워요."},{"no":25,"k":"부지런하다","e":"diligent","s":"저는 부지런해요."},{"no":26,"k":"비밀","e":"secret","s":"저는 비밀을 좋아해요."},{"no":27,"k":"사랑","e":"love","s":"저는 사랑을 좋아해요."},{"no":28,"k":"사랑하다","e":"love","s":"가족을 사랑해요."},{"no":29,"k":"성격","e":"personality","s":"성격이 밝고 친절해요."},{"no":30,"k":"슬퍼하다","e":"sorrow, mourn","s":"저는 슬퍼해요."},{"no":31,"k":"슬프다","e":"sad","s":"영화가 슬퍼요."},{"no":32,"k":"싫다","e":"hate","s":"거짓말이 싫어요."},{"no":33,"k":"싫어하다","e":"dislike, hate","s":"저는 매운 음식을 싫어해요."},{"no":34,"k":"심하다","e":"severe, terrible","s":"저는 심해요."},{"no":35,"k":"싸우다","e":"fight","s":"저는 싸워요."},{"no":36,"k":"외롭다","e":"lonely","s":"저는 외롭아요."},{"no":37,"k":"울다","e":"cry","s":"슬퍼서 울어요."},{"no":38,"k":"울리다","e":"make cry, chime","s":"저는 울여요."},{"no":39,"k":"웃기다","e":"funny, make someone laugh","s":"이것이 웃여요."},{"no":40,"k":"웃다","e":"laugh","s":"재미있어서 웃어요."},{"no":41,"k":"원하다","e":"want, wish, desire","s":"저는 원해요."},{"no":42,"k":"인상","e":"impression","s":"첫인상이 좋았어요."},{"no":43,"k":"자","e":"character, Here we go.","s":"자 시간이 있어요."},{"no":44,"k":"장점","e":"advantage","s":"저는 장점을 좋아해요."},{"no":45,"k":"재미없다","e":"not funny, uninteresting","s":"수업이 재미없어요."},{"no":46,"k":"좋다","e":"good","s":"날씨가 좋아요."},{"no":47,"k":"좋아하다","e":"like","s":"저는 음악을 좋아해요."},{"no":48,"k":"즐거워하다","e":"have fun","s":"저는 즐거워해요."},{"no":49,"k":"즐겁다","e":"fun, be pleasant","s":"이것이 즐거워요."},{"no":50,"k":"즐기다","e":"enjoy, have fun","s":"저는 즐여요."},{"no":51,"k":"착하다","e":"be good, friendly","s":"저는 착해요."},{"no":52,"k":"최고","e":"best, the highest","s":"저는 최고를 좋아해요."},{"no":53,"k":"추억","e":"memory","s":"저는 추억을 좋아해요."},{"no":54,"k":"친절하다","e":"be kind","s":"선생님이 친절해요."},{"no":55,"k":"친하다","e":"close, familiar","s":"저는 친해요."},{"no":56,"k":"한자","e":"Chinese character","s":"저는 한자를 좋아해요."},{"no":57,"k":"행복","e":"happiness","s":"저는 행복을 좋아해요."},{"no":58,"k":"행복하다","e":"happy","s":"저는 행복해요."},{"no":59,"k":"화","e":"anger","s":"저는 화를 좋아해요."},{"no":60,"k":"화나다","e":"angry","s":"이것이 화나요."},{"no":61,"k":"화내다","e":"get angry","s":"이것이 화내어요."},{"no":62,"k":"힘","e":"power","s":"저는 힘을 좋아해요."}]},{"id":20,"ko":"기본 표현 & 수","en":"Basic Expressions & Numbers","color":"#A6A6A6","short":"Basics","words":[{"no":1,"k":"가깝다","e":"close","s":"학교가 가까워요."},{"no":2,"k":"가볍다","e":"light","s":"깃털이 가벼워요."},{"no":3,"k":"가운데","e":"middle","s":"저는 가운데를 좋아해요."},{"no":4,"k":"가위","e":"scissors","s":"가위 시간이 있어요."},{"no":5,"k":"가장","e":"most","s":"저는 가장을 좋아해요."},{"no":6,"k":"가지다","e":"have","s":"저는 가여요."},{"no":7,"k":"각","e":"each","s":"각 나라의 문화가 달라요."},{"no":8,"k":"간단하다","e":"simple, easy","s":"저는 간단해요."},{"no":9,"k":"간단히","e":"simply","s":"저는 간단히를 좋아해요."},{"no":10,"k":"갈색","e":"brown","s":"저는 갈색을 좋아해요."},{"no":11,"k":"감사","e":"thank","s":"저는 감사를 좋아해요."},{"no":12,"k":"갑자기","e":"suddenly","s":"갑자기 비가 왔어요."},{"no":13,"k":"갖다","e":"have","s":"저는 갖아요."},{"no":14,"k":"같다","e":"same","s":"우리는 나이가 같아요."},{"no":15,"k":"같이","e":"together","s":"같이 점심 먹을까요?"},{"no":16,"k":"개","e":"dog, ~ piece(s)","s":"사과를 세 개 샀어요."},{"no":17,"k":"거기","e":"there","s":"거기 시간이 있어요."},{"no":18,"k":"거의","e":"almost, nearly","s":"숙제를 거의 다 했어요."},{"no":19,"k":"걸다","e":"bet, call","s":"저는 걸어요."},{"no":20,"k":"검은색","e":"black","s":"저는 검은색을 좋아해요."},{"no":21,"k":"것","e":"that, thing, it","s":"저는 것을 좋아해요."},{"no":22,"k":"과","e":"division","s":"저는 과를 좋아해요."},{"no":23,"k":"관계","e":"relation","s":"우리의 관계가 좋아요."},{"no":24,"k":"구","e":"9","s":"저는 구를 좋아해요."},{"no":25,"k":"구십","e":"90","s":"저는 구십을 좋아해요."},{"no":26,"k":"구하다","e":"save, seek, get","s":"저는 구해요."},{"no":27,"k":"권","e":"~ book(s)","s":"책을 한 권 읽었어요."},{"no":28,"k":"그","e":"it","s":"저는 그를 좋아해요."},{"no":29,"k":"그거","e":"it","s":"저는 그거를 좋아해요."},{"no":30,"k":"그것","e":"it","s":"저는 그것을 좋아해요."},{"no":31,"k":"그곳","e":"there","s":"그곳 시간이 있어요."},{"no":32,"k":"그냥","e":"just, as it is","s":"그냥 집에 있어요."},{"no":33,"k":"그들","e":"them, they","s":"저는 그들을 좋아해요."},{"no":34,"k":"그래서","e":"so, thus","s":"피곤해요. 그래서 일찍 자요."},{"no":35,"k":"그램","e":"gram","s":"저는 그램을 좋아해요."},{"no":36,"k":"그러나","e":"but, however","s":"열심히 했어요. 그러나 쉽지 않았어요."},{"no":37,"k":"그러니까","e":"so, because","s":"그러니까 시간이 있어요."},{"no":38,"k":"그러면","e":"then, if so","s":"내일 시간 있어요? 그러면 같이 가요."},{"no":39,"k":"그런","e":"then, such","s":"그런 시간이 있어요."},{"no":40,"k":"그런데","e":"by the way, however","s":"오늘 날씨가 좋아요. 그런데 추워요."},{"no":41,"k":"그럼","e":"then","s":"그럼 내일 봐요."},{"no":42,"k":"그렇게","e":"like that, so","s":"그렇게 빨리 먹으면 안 돼요."},{"no":43,"k":"그렇지만","e":"nevertheless, but","s":"그렇지만 시간이 있어요."},{"no":44,"k":"그리고","e":"and","s":"저는 그리고를 좋아해요."},{"no":45,"k":"그만","e":"stop, finish","s":"저는 그만을 좋아해요."},{"no":46,"k":"그분","e":"his, the person","s":"제 그분이 있어요."},{"no":47,"k":"그중","e":"among them","s":"저는 그중을 좋아해요."},{"no":48,"k":"그쪽","e":"there, the person","s":"제 그쪽이 있어요."},{"no":49,"k":"그치다","e":"stop, end, cease","s":"저는 그여요."},{"no":50,"k":"근처","e":"nearby, neighborhood","s":"저는 근처를 좋아해요."},{"no":51,"k":"급하다","e":"hurry, urgent","s":"저는 급해요."},{"no":52,"k":"기간","e":"term, period","s":"수업 기간이 한 달이에요."},{"no":53,"k":"기다리다","e":"wait","s":"버스를 기다려요."},{"no":54,"k":"기타","e":"other","s":"저는 기타를 좋아해요."},{"no":55,"k":"길다","e":"long","s":"머리가 길어요."},{"no":56,"k":"까만색","e":"black color","s":"저는 까만색을 좋아해요."},{"no":57,"k":"까맣다","e":"black","s":"저는 까맣아요."},{"no":58,"k":"깎다","e":"cut, shave","s":"저는 깎아요."},{"no":59,"k":"깨다","e":"wake up, crack, break","s":"저는 깨어요."},{"no":60,"k":"꺼내다","e":"take out","s":"가방에서 책을 꺼내요."},{"no":61,"k":"꼭","e":"exactly, absolutely","s":"내일 꼭 오세요."},{"no":62,"k":"끝","e":"end","s":"저는 끝을 좋아해요."},{"no":63,"k":"끝나다","e":"finish, end","s":"영화가 끝나요."},{"no":64,"k":"나","e":"I","s":"저는 나를 좋아해요."},{"no":65,"k":"나누다","e":"share, divide","s":"음식을 나눠요."},{"no":66,"k":"나다","e":"occur, come out","s":"저는 나요."},{"no":67,"k":"나이","e":"age, old","s":"저는 나이를 좋아해요."},{"no":68,"k":"남","e":"south, man","s":"제 남이 있어요."},{"no":69,"k":"남기다","e":"leave","s":"저는 남여요."},{"no":70,"k":"남북","e":"north and south","s":"남북 시간이 있어요."},{"no":71,"k":"남쪽","e":"south","s":"남쪽 시간이 있어요."},{"no":72,"k":"낮다","e":"low","s":"목소리가 낮아요."},{"no":73,"k":"내","e":"of mine, my","s":"저는 내를 좋아해요."},{"no":74,"k":"내가","e":"I","s":"저는 내가를 좋아해요."},{"no":75,"k":"내용","e":"content","s":"저는 내용을 좋아해요."},{"no":76,"k":"냄새","e":"smell","s":"저는 냄새를 좋아해요."},{"no":77,"k":"너","e":"you","s":"저는 너를 좋아해요."},{"no":78,"k":"너무","e":"too, very","s":"오늘 너무 피곤해요."},{"no":79,"k":"넓다","e":"wide","s":"방이 넓어요."},{"no":80,"k":"넘다","e":"exceed, more than","s":"저는 넘어요."},{"no":81,"k":"넘어지다","e":"fall down, fall","s":"저는 넘어여요."},{"no":82,"k":"넣다","e":"put in","s":"가방에 책을 넣어요."},{"no":83,"k":"넷","e":"4","s":"저는 넷을 좋아해요."},{"no":84,"k":"넷째","e":"fourth","s":"저는 넷째를 좋아해요."},{"no":85,"k":"노란색","e":"yellow color","s":"저는 노란색을 좋아해요."},{"no":86,"k":"노랗다","e":"yellow","s":"저는 노랗아요."},{"no":87,"k":"녹색","e":"green","s":"저는 녹색을 좋아해요."},{"no":88,"k":"높다","e":"high","s":"산이 높아요."},{"no":89,"k":"놓다","e":"put","s":"책을 책상에 놓아요."},{"no":90,"k":"누가","e":"who","s":"저는 누가를 좋아해요."},{"no":91,"k":"누구","e":"who","s":"저는 누구를 좋아해요."},{"no":92,"k":"누르다","e":"press down, push","s":"저는 눌러요."},{"no":93,"k":"눕다","e":"lie down, sleep","s":"침대에 누워요."},{"no":94,"k":"느리다","e":"slow","s":"거북이가 느려요."},{"no":95,"k":"늘","e":"always","s":"저는 늘 일찍 일어나요."},{"no":96,"k":"늘다","e":"gain, increase","s":"저는 늘어요."},{"no":97,"k":"능력","e":"ability","s":"한국어 능력이 향상됐어요."},{"no":98,"k":"늦다","e":"late, delay","s":"저는 늦어요."},{"no":99,"k":"늦잠","e":"overslept, sleeping in late","s":"저는 늦잠을 좋아해요."},{"no":100,"k":"님","e":"Sir","s":"저는 님을 좋아해요."},{"no":101,"k":"다","e":"all, whole","s":"숙제를 다 했어요."},{"no":102,"k":"다르다","e":"different","s":"두 사람의 생각이 달라요."},{"no":103,"k":"다른","e":"other ~, another ~, different ~","s":"저는 다른을 좋아해요."},{"no":104,"k":"다섯","e":"5","s":"저는 다섯을 좋아해요."},{"no":105,"k":"다시","e":"again","s":"한 번 더 다시 해 보세요."},{"no":106,"k":"다음","e":"next, after","s":"저는 다음을 좋아해요."},{"no":107,"k":"당신","e":"you","s":"저는 당신을 좋아해요."},{"no":108,"k":"대","e":"versus, large","s":"자동차 한 대가 있어요."},{"no":109,"k":"대답","e":"answer","s":"저는 대답을 좋아해요."},{"no":110,"k":"대답하다","e":"answer, reply","s":"질문에 대답해요."},{"no":111,"k":"대부분","e":"mostly, almost","s":"대부분 시간이 있어요."},{"no":112,"k":"대화","e":"conversation, dialogue","s":"친구와 대화를 나눠요."},{"no":113,"k":"더","e":"more","s":"물을 더 마셔요."},{"no":114,"k":"덮다","e":"cover","s":"저는 덮어요."},{"no":115,"k":"도와주다","e":"help","s":"저는 도와워요."},{"no":116,"k":"도움","e":"help, assistance","s":"도움이 필요해요."},{"no":117,"k":"돕다","e":"help","s":"저는 돕아요."},{"no":118,"k":"동쪽","e":"east","s":"저는 동쪽을 좋아해요."},{"no":119,"k":"되다","e":"become","s":"저는 되어요."},{"no":120,"k":"두","e":"two","s":"저는 두를 좋아해요."},{"no":121,"k":"두껍다","e":"thick","s":"이것이 두꺼워요."},{"no":122,"k":"두다","e":"put","s":"저는 워요."},{"no":123,"k":"둘","e":"2","s":"저는 둘을 좋아해요."},{"no":124,"k":"둘째","e":"second, the second of~","s":"저는 둘째를 좋아해요."},{"no":125,"k":"뒤","e":"rear, back","s":"저는 뒤를 좋아해요."},{"no":126,"k":"뒤쪽","e":"behind, back, towards the rear","s":"저는 뒤쪽을 좋아해요."},{"no":127,"k":"드리다","e":"give","s":"저는 드여요."},{"no":128,"k":"듣다","e":"listen","s":"음악을 들어요."},{"no":129,"k":"들다","e":"hold, enter","s":"가방을 들어요."},{"no":130,"k":"등","e":"etc, back","s":"저는 등을 좋아해요."},{"no":131,"k":"따로","e":"separately","s":"따로 포장해 드릴게요."},{"no":132,"k":"때문","e":"because, for ~, so~","s":"때문 시간이 있어요."},{"no":133,"k":"떨어지다","e":"drop","s":"저는 떨어여요."},{"no":134,"k":"또","e":"in addition, again","s":"내일 또 만나요."},{"no":135,"k":"또는","e":"or","s":"저는 또는을 좋아해요."},{"no":136,"k":"똑같다","e":"same","s":"이것이 똑같아요."},{"no":137,"k":"똑바로","e":"upright, straight","s":"저는 똑바로를 좋아해요."},{"no":138,"k":"뜻","e":"meaning","s":"저는 뜻을 좋아해요."},{"no":139,"k":"마리","e":"~ animal(s), ~ head(s)","s":"고양이 한 마리를 키워요."},{"no":140,"k":"마흔","e":"40","s":"저는 마흔을 좋아해요."},{"no":141,"k":"막히다","e":"be blocked, be clogged","s":"이것이 막여요."},{"no":142,"k":"만","e":"only, ten thousand","s":"만 시간이 있어요."},{"no":143,"k":"만들다","e":"make, create","s":"케이크를 만들어요."},{"no":144,"k":"만일","e":"if, should","s":"저는 만일을 좋아해요."},{"no":145,"k":"만지다","e":"touch","s":"저는 만여요."},{"no":146,"k":"많다","e":"many","s":"사람이 많아요."},{"no":147,"k":"많이","e":"a lot of, many","s":"많이 드세요."},{"no":148,"k":"말","e":"word, talk","s":"저는 말을 좋아해요."},{"no":149,"k":"말하다","e":"say, talk","s":"천천히 말해요."},{"no":150,"k":"맞다","e":"right, fit, correct","s":"답이 맞아요."},{"no":151,"k":"매다","e":"tie","s":"저는 매어요."},{"no":152,"k":"매우","e":"extremely, very","s":"매우 시간이 있어요."},{"no":153,"k":"멀다","e":"far, distant, long","s":"회사가 멀어요."},{"no":154,"k":"명","e":"~ person(s)","s":"학생이 스무 명이에요."},{"no":155,"k":"몇","e":"a few, a number of","s":"저는 몇을 좋아해요."},{"no":156,"k":"모두","e":"all, everyone","s":"모두 자리에 앉으세요."},{"no":157,"k":"모르다","e":"do not know","s":"그 사람을 몰라요."},{"no":158,"k":"모양","e":"shape, form, style","s":"저는 모양을 좋아해요."},{"no":159,"k":"모으다","e":"collect, gather","s":"저는 모써요."},{"no":160,"k":"목소리","e":"voice","s":"저는 목소리를 먹어요."},{"no":161,"k":"목적","e":"purpose","s":"공부하는 목적이 있어요."},{"no":162,"k":"못하다","e":"~ can not do","s":"저는 못해요."},{"no":163,"k":"무겁다","e":"heavy","s":"가방이 무거워요."},{"no":164,"k":"무리","e":"swarm, unreasonable","s":"제 무리가 있어요."},{"no":165,"k":"무슨","e":"what","s":"저는 무슨을 좋아해요."},{"no":166,"k":"무엇","e":"what","s":"저는 무엇을 좋아해요."},{"no":167,"k":"무엇이","e":"what","s":"저는 무엇이를 좋아해요."},{"no":168,"k":"무역","e":"trade","s":"저는 무역을 좋아해요."},{"no":169,"k":"무척","e":"very","s":"무척 시간이 있어요."},{"no":170,"k":"문제","e":"problem","s":"이 문제가 어려워요."},{"no":171,"k":"묻다","e":"ask","s":"저는 물어요."},{"no":172,"k":"물론","e":"sure, of course","s":"물론 도와드릴게요."},{"no":173,"k":"물어보다","e":"ask","s":"저는 물어와요."},{"no":174,"k":"뭐","e":"what","s":"저는 뭐를 좋아해요."},{"no":175,"k":"미터","e":"meter","s":"저는 미터를 좋아해요."},{"no":176,"k":"밀리다","e":"be shaved, be pushed","s":"이것이 밀여요."},{"no":177,"k":"밑","e":"bottom, below","s":"저는 밑을 좋아해요."},{"no":178,"k":"바꾸다","e":"change","s":"비밀번호를 바꿔요."},{"no":179,"k":"바뀌다","e":"be changed","s":"이것이 바뀌어요."},{"no":180,"k":"바로","e":"immediately, soon, just","s":"바로 시간이 있어요."},{"no":181,"k":"바르다","e":"right, paint, wear","s":"저는 발라요."},{"no":182,"k":"박수","e":"clap, applause","s":"저는 박수를 좋아해요."},{"no":183,"k":"밖","e":"out, outside","s":"저는 밖을 좋아해요."},{"no":184,"k":"반","e":"half, group","s":"저는 반을 좋아해요."},{"no":185,"k":"받다","e":"receive","s":"선물을 받아요."},{"no":186,"k":"밝다","e":"bright","s":"이것이 밝아요."},{"no":187,"k":"방법","e":"way, method","s":"좋은 방법을 찾았어요."},{"no":188,"k":"배고프다","e":"hungry","s":"밥을 안 먹어서 배고파요."},{"no":189,"k":"백","e":"100","s":"저는 백을 좋아해요."},{"no":190,"k":"번","e":"~ time(s)","s":"이번에 두 번째예요."},{"no":191,"k":"번호","e":"number","s":"전화번호를 알려 주세요."},{"no":192,"k":"별로","e":"not really","s":"별로 시간이 있어요."},{"no":193,"k":"병","e":"illness, ~ bottle(s)","s":"물을 한 병 마셨어요."},{"no":194,"k":"보내다","e":"send, spend","s":"친구에게 문자를 보내요."},{"no":195,"k":"보다","e":"see","s":"영화를 봐요."},{"no":196,"k":"보이다","e":"show, look","s":"저는 보여요."},{"no":197,"k":"보통","e":"usually, normally, in general","s":"보통 시간이 있어요."},{"no":198,"k":"복잡하다","e":"complicated, crowded","s":"저는 복잡해요."},{"no":199,"k":"부탁","e":"request, please","s":"저는 부탁을 좋아해요."},{"no":200,"k":"부탁하다","e":"beg, ask","s":"저는 부탁해요."},{"no":201,"k":"북쪽","e":"North","s":"저는 북쪽을 좋아해요."},{"no":202,"k":"분위기","e":"","s":"저는 분위기를 좋아해요."},{"no":203,"k":"불편하다","e":"uncomfortable, inconvenient","s":"저는 불편해요."},{"no":204,"k":"붙다","e":"stick, pass a test","s":"저는 붙어요."},{"no":205,"k":"붙이다","e":"attach, stick","s":"저는 붙여요."},{"no":206,"k":"비슷하다","e":"similar, like","s":"저는 비슷해요."},{"no":207,"k":"빠르다","e":"fast","s":"버스가 빨라요."},{"no":208,"k":"빨간색","e":"red color","s":"저는 빨간색을 좋아해요."},{"no":209,"k":"빨갛다","e":"red","s":"저는 빨갛아요."},{"no":210,"k":"빨리","e":"quickly","s":"빨리 오세요."},{"no":211,"k":"빼다","e":"remove, pull, pull out","s":"저는 빼어요."},{"no":212,"k":"뿐","e":"only","s":"뿐 시간이 있어요."},{"no":213,"k":"사","e":"4","s":"저는 사를 좋아해요."},{"no":214,"k":"사물","e":"object, thing","s":"저는 사물을 좋아해요."},{"no":215,"k":"사십","e":"40","s":"저는 사십을 좋아해요."},{"no":216,"k":"사용하다","e":"use","s":"저는 사용해요."},{"no":217,"k":"사이","e":"between, while","s":"저는 사이를 좋아해요."},{"no":218,"k":"사이즈","e":"size","s":"저는 사이즈를 좋아해요."},{"no":219,"k":"사인하다","e":"sign","s":"저는 사인해요."},{"no":220,"k":"살다","e":"live","s":"서울에 살아요."},{"no":221,"k":"삼","e":"3","s":"저는 삼을 좋아해요."},{"no":222,"k":"삼십","e":"30","s":"저는 삼십을 좋아해요."},{"no":223,"k":"상관","e":"relation","s":"저는 상관을 좋아해요."},{"no":224,"k":"새","e":"bird, new","s":"저는 새를 좋아해요."},{"no":225,"k":"새로","e":"newly","s":"저는 새로를 좋아해요."},{"no":226,"k":"색","e":"color","s":"저는 색을 좋아해요."},{"no":227,"k":"색깔","e":"color","s":"저는 색깔을 좋아해요."},{"no":228,"k":"생각","e":"thinking, thought","s":"좋은 생각이 있어요."},{"no":229,"k":"생각되다","e":"be considered, it seems~","s":"이것이 생각되어요."},{"no":230,"k":"생각하다","e":"think","s":"열심히 생각해요."},{"no":231,"k":"생기다","e":"form, arise","s":"새 카페가 생겼어요."},{"no":232,"k":"서다","e":"stand","s":"줄을 서요."},{"no":233,"k":"서로","e":"each other, both","s":"서로 도와요."},{"no":234,"k":"서른","e":"30","s":"저는 서른을 좋아해요."},{"no":235,"k":"서쪽","e":"west, western","s":"저는 서쪽을 좋아해요."},{"no":236,"k":"선물","e":"gift, present","s":"저는 선물을 좋아해요."},{"no":237,"k":"성","e":"castle, last name","s":"저는 성을 좋아해요."},{"no":238,"k":"센티미터","e":"centimeter","s":"저는 센티미터를 좋아해요."},{"no":239,"k":"셋","e":"3","s":"저는 셋을 좋아해요."},{"no":240,"k":"셋째","e":"third","s":"저는 셋째를 좋아해요."},{"no":241,"k":"소리","e":"sound, voice","s":"저는 소리를 먹어요."},{"no":242,"k":"속","e":"inside","s":"저는 속을 좋아해요."},{"no":243,"k":"순서","e":"order, turn","s":"순서를 지켜요."},{"no":244,"k":"쉬다","e":"rest","s":"주말에 쉬어요."},{"no":245,"k":"쉰","e":"50","s":"저는 쉰을 좋아해요."},{"no":246,"k":"쉽다","e":"easy","s":"문제가 쉬워요."},{"no":247,"k":"스물","e":"20","s":"저는 스물을 좋아해요."},{"no":248,"k":"습관","e":"habit","s":"좋은 습관을 만들어요."},{"no":249,"k":"시끄럽다","e":"noisy","s":"길이 시끄러워요."},{"no":250,"k":"시작되다","e":"begin","s":"수업이 시작돼요."},{"no":251,"k":"신","e":"god, new","s":"저는 신을 좋아해요."},{"no":252,"k":"실수","e":"mistake, failure","s":"저는 실수를 좋아해요."},{"no":253,"k":"십","e":"10","s":"저는 십을 좋아해요."},{"no":254,"k":"싶다","e":"want","s":"저는 싶어요."},{"no":255,"k":"쌓이다","e":"stack up, pile up","s":"저는 쌓여요."},{"no":256,"k":"쓰이다","e":"be written, be used","s":"이것이 쓰여요."},{"no":257,"k":"씨","e":"seed, Mr. ~","s":"저는 씨를 좋아해요."},{"no":258,"k":"씩","e":"each, every, per","s":"씩 시간이 있어요."},{"no":259,"k":"아래","e":"bottom, under","s":"저는 아래를 좋아해요."},{"no":260,"k":"아마","e":"maybe, perhaps","s":"아마 내일 비가 올 거예요."},{"no":261,"k":"아무","e":"any","s":"저는 아무를 좋아해요."},{"no":262,"k":"아주","e":"very, completely","s":"아주 시간이 있어요."},{"no":263,"k":"아홉","e":"9","s":"저는 아홉을 좋아해요."},{"no":264,"k":"아흔","e":"90","s":"저는 아흔을 좋아해요."},{"no":265,"k":"안","e":"within, not ~","s":"저는 안을 좋아해요."},{"no":266,"k":"안다","e":"embrace, cradle","s":"저는 안아요."},{"no":267,"k":"앉다","e":"sit","s":"의자에 앉아요."},{"no":268,"k":"알다","e":"know","s":"한국어를 알아요."},{"no":269,"k":"알리다","e":"inform","s":"저는 알여요."},{"no":270,"k":"알맞다","e":"fit, appropriate","s":"저는 알맞아요."},{"no":271,"k":"앞","e":"front, previous","s":"저는 앞을 좋아해요."},{"no":272,"k":"애","e":"child","s":"제 애가 있어요."},{"no":273,"k":"약간","e":"slightly, a little","s":"저는 약간을 좋아해요."},{"no":274,"k":"얇다","e":"thin","s":"이것이 얇아요."},{"no":275,"k":"양","e":"amount, sheep","s":"저는 양을 좋아해요."},{"no":276,"k":"양식","e":"form, western style","s":"저는 양식을 좋아해요."},{"no":277,"k":"어느","e":"which, how","s":"저는 어느를 좋아해요."},{"no":278,"k":"어둡다","e":"dark","s":"이것이 어두워요."},{"no":279,"k":"어디","e":"where","s":"어디 시간이 있어요."},{"no":280,"k":"어떤","e":"which, what","s":"저는 어떤을 좋아해요."},{"no":281,"k":"어떻게","e":"how","s":"저는 어떻게를 좋아해요."},{"no":282,"k":"어떻다","e":"how","s":"저는 어떻어요."},{"no":283,"k":"어떻습니까?","e":"How is it?","s":"저는 어떻습니까?를 좋아해요."},{"no":284,"k":"어렵다","e":"difficult","s":"시험이 어려워요."},{"no":285,"k":"어리다","e":"young","s":"이것이 어여요."},{"no":286,"k":"어서","e":"hurry, quickly","s":"어서 시간이 있어요."},{"no":287,"k":"어울리다","e":"look good on, befit","s":"날씨가 어울여요."},{"no":288,"k":"언제","e":"when","s":"저는 언제를 좋아해요."},{"no":289,"k":"얼마나","e":"how much","s":"서울까지 얼마나 걸려요?"},{"no":290,"k":"얼음","e":"ice","s":"저는 얼음을 먹어요."},{"no":291,"k":"없다","e":"none, no, not","s":"돈이 없어요."},{"no":292,"k":"없이","e":"without","s":"저는 없이를 좋아해요."},{"no":293,"k":"여기","e":"here","s":"여기 시간이 있어요."},{"no":294,"k":"여기저기","e":"here and there","s":"여기저기 시간이 있어요."},{"no":295,"k":"여덟","e":"8","s":"저는 여덟을 좋아해요."},{"no":296,"k":"여든","e":"80","s":"저는 여든을 좋아해요."},{"no":297,"k":"여러","e":"various, many","s":"제 여러가 있어요."},{"no":298,"k":"여러가지","e":"several, various","s":"저는 여러가지를 좋아해요."},{"no":299,"k":"여러분","e":"everyone, ladies and gentlemen","s":"여러분 시간이 있어요."},{"no":300,"k":"여보요","e":"hello","s":""},{"no":301,"k":"여섯","e":"6","s":"저는 여섯을 좋아해요."},{"no":302,"k":"역사","e":"history","s":"저는 역사를 좋아해요."},{"no":303,"k":"연","e":"age (honorific form)","s":""},{"no":304,"k":"열","e":"10","s":"저는 열을 좋아해요."},{"no":305,"k":"열심히","e":"hard, enthusiastic","s":"저는 열심히 공부해요."},{"no":306,"k":"영","e":"spirit, zero","s":"저는 영을 좋아해요."},{"no":307,"k":"영상","e":"video","s":"저는 영상을 좋아해요."},{"no":308,"k":"옆","e":"side","s":"저는 옆을 좋아해요."},{"no":309,"k":"예순","e":"60","s":"저는 예순을 좋아해요."},{"no":310,"k":"오","e":"5","s":"저는 오를 좋아해요."},{"no":311,"k":"오른쪽","e":"right side, right","s":"저는 오른쪽을 좋아해요."},{"no":312,"k":"오십","e":"50","s":"저는 오십을 좋아해요."},{"no":313,"k":"왜","e":"why","s":"왜 늦었어요?"},{"no":314,"k":"왜냐하면","e":"because","s":"저는 왜냐하면을 좋아해요."},{"no":315,"k":"외국인","e":"foreigner","s":"저는 외국인을 좋아해요."},{"no":316,"k":"외출하다","e":"go out","s":"저는 외출해요."},{"no":317,"k":"왼쪽","e":"left","s":"저는 왼쪽을 좋아해요."},{"no":318,"k":"우리","e":"we, us","s":"저는 우리를 좋아해요."},{"no":319,"k":"우선","e":"first","s":"저는 우선을 좋아해요."},{"no":320,"k":"움직이다","e":"move","s":"저는 움직여요."},{"no":321,"k":"위","e":"top, up","s":"저는 위를 좋아해요."},{"no":322,"k":"위치","e":"location, position","s":"저는 위치를 좋아해요."},{"no":323,"k":"위하다","e":"for, in favor of, for the sake of","s":"저는 위해요."},{"no":324,"k":"유리","e":"glass","s":"저는 유리를 좋아해요."},{"no":325,"k":"육","e":"6","s":"저는 육을 좋아해요."},{"no":326,"k":"육십","e":"60","s":"저는 육십을 좋아해요."},{"no":327,"k":"의미","e":"meaning","s":"저는 의미를 좋아해요."},{"no":328,"k":"이","e":"this, tooth, 2","s":"이 시간이 있어요."},{"no":329,"k":"이거","e":"this","s":"저는 이거를 좋아해요."},{"no":330,"k":"이것","e":"this","s":"저는 이것을 좋아해요."},{"no":331,"k":"이곳","e":"this place, here","s":"저는 이곳에 가요."},{"no":332,"k":"이런","e":"this, such ~","s":"저는 이런을 좋아해요."},{"no":333,"k":"이렇게","e":"like this, so, in this way","s":"이렇게 시간이 있어요."},{"no":334,"k":"이렇다","e":"like this","s":"저는 이렇어요."},{"no":335,"k":"이분","e":"this person","s":"제 이분이 있어요."},{"no":336,"k":"이상","e":"more than, strange","s":"저는 이상을 좋아해요."},{"no":337,"k":"이상하다","e":"strange, funny, weird","s":"저는 이상해요."},{"no":338,"k":"이십","e":"20","s":"저는 이십을 좋아해요."},{"no":339,"k":"이야기","e":"story","s":"저는 이야기를 좋아해요."},{"no":340,"k":"이용","e":"usage","s":"저는 이용을 좋아해요."},{"no":341,"k":"이용하다","e":"use","s":"저는 이용해요."},{"no":342,"k":"이유","e":"reason","s":"왜 늦었어요? 이유를 말해요."},{"no":343,"k":"이쪽","e":"this way, here, this person","s":"제 이쪽이 있어요."},{"no":344,"k":"인","e":"sign, ~ person(s)","s":"제 인이 있어요."},{"no":345,"k":"일곱","e":"7","s":"저는 일곱을 좋아해요."},{"no":346,"k":"일어나다","e":"rise, stand, occur","s":"아침 일곱 시에 일어나요."},{"no":347,"k":"일어서다","e":"get up, stand up","s":"저는 일어서어요."},{"no":348,"k":"일흔","e":"70","s":"저는 일흔을 좋아해요."},{"no":349,"k":"잃다","e":"lose","s":"지갑을 잃었어요."},{"no":350,"k":"잃어버리다","e":"lose","s":"저는 잃어버여요."},{"no":351,"k":"있다","e":"have, there","s":"방에 책이 있어요."},{"no":352,"k":"잊다","e":"forget","s":"저는 잊어요."},{"no":353,"k":"잊어버리다","e":"forget","s":"저는 잊어버여요."},{"no":354,"k":"자기","e":"myself, own","s":"저는 자기를 좋아해요."},{"no":355,"k":"자다","e":"sleep","s":"밤 열 시에 자요."},{"no":356,"k":"자르다","e":"cut","s":"머리를 잘라요."},{"no":357,"k":"자신","e":"myself, own","s":"저는 자신을 좋아해요."},{"no":358,"k":"자유","e":"freedom","s":"저는 자유를 좋아해요."},{"no":359,"k":"자주","e":"often","s":"저는 자주 도서관에 가요."},{"no":360,"k":"작다","e":"small","s":"방이 작아요."},{"no":361,"k":"잘","e":"well","s":"한국어를 잘 해요."},{"no":362,"k":"잘못","e":"mistake","s":"저는 잘못을 좋아해요."},{"no":363,"k":"잘하다","e":"do well, good at","s":"저는 잘해요."},{"no":364,"k":"잠","e":"slumbers, sleep","s":"저는 잠을 좋아해요."},{"no":365,"k":"잠깐","e":"for a while, a little","s":"저는 잠깐을 좋아해요."},{"no":366,"k":"잠시","e":"for a bit, for a while, a little","s":"저는 잠시를 좋아해요."},{"no":367,"k":"잡다","e":"catch, grab, hold","s":"저는 잡아요."},{"no":368,"k":"장","e":"~ chapter(s), ~ sheet(s)","s":"종이를 한 장 주세요."},{"no":369,"k":"재료","e":"material","s":"저는 재료를 좋아해요."},{"no":370,"k":"재미있다","e":"interesting","s":"영화가 재미있어요."},{"no":371,"k":"저","e":"that","s":"저는 저를 좋아해요."},{"no":372,"k":"저거","e":"that","s":"저는 저거를 좋아해요."},{"no":373,"k":"저것","e":"that","s":"저는 저것을 좋아해요."},{"no":374,"k":"저곳","e":"over there","s":"저곳 시간이 있어요."},{"no":375,"k":"저기","e":"there, over there","s":"저기 시간이 있어요."},{"no":376,"k":"저분","e":"that person","s":"제 저분이 있어요."},{"no":377,"k":"저쪽","e":"there, over there","s":"저쪽 시간이 있어요."},{"no":378,"k":"저희","e":"we","s":"저는 저희를 좋아해요."},{"no":379,"k":"적","e":"enemy","s":"저는 적을 좋아해요."},{"no":380,"k":"전","e":"all, before","s":"수업 전에 예습해요."},{"no":381,"k":"전하다","e":"tell","s":"저는 전해요."},{"no":382,"k":"전혀","e":"not at all","s":"전혀 시간이 있어요."},{"no":383,"k":"절대","e":"never, absolutely","s":"절대 시간이 있어요."},{"no":384,"k":"젊다","e":"young","s":"이것이 젊어요."},{"no":385,"k":"점","e":"point","s":"저는 점을 좋아해요."},{"no":386,"k":"정도","e":"degree","s":"저는 정도를 좋아해요."},{"no":387,"k":"정리하다","e":"straighten out, organize","s":"저는 정리해요."},{"no":388,"k":"정말","e":"really, truly","s":"정말 맛있어요."},{"no":389,"k":"정하다","e":"choose, establish","s":"저는 정해요."},{"no":390,"k":"제가","e":"I","s":"저는 제가를 좋아해요."},{"no":391,"k":"제목","e":"title","s":"저는 제목을 좋아해요."},{"no":392,"k":"제일","e":"most","s":"제일 좋아하는 음식은 불고기예요."},{"no":393,"k":"조금","e":"a little","s":"조금 기다려 주세요."},{"no":394,"k":"조사하다","e":"investigate","s":"저는 조사해요."},{"no":395,"k":"조용하다","e":"silent, quiet","s":"도서관이 조용해요."},{"no":396,"k":"조용히","e":"quietly","s":"저는 조용히를 좋아해요."},{"no":397,"k":"좀","e":"a little","s":"좀 도와주세요."},{"no":398,"k":"좀더","e":"a little more","s":"저는 좀더를 좋아해요."},{"no":399,"k":"좁다","e":"narrow","s":"길이 좁아요."},{"no":400,"k":"종류","e":"kind, type","s":"저는 종류를 좋아해요."},{"no":401,"k":"종이","e":"paper","s":"저는 종이를 좋아해요."},{"no":402,"k":"주다","e":"give","s":"친구에게 선물을 줘요."},{"no":403,"k":"주로","e":"mainly","s":"저는 주로를 좋아해요."},{"no":404,"k":"주머니","e":"pocket, pouch","s":"저는 주머니를 좋아해요."},{"no":405,"k":"주무시다","e":"sleep, rest","s":"저는 주무여요."},{"no":406,"k":"주변","e":"around","s":"저는 주변을 좋아해요."},{"no":407,"k":"주위","e":"around","s":"저는 주위를 좋아해요."},{"no":408,"k":"주인","e":"owner","s":"저는 주인을 좋아해요."},{"no":409,"k":"주황색","e":"orange color","s":"저는 주황색을 좋아해요."},{"no":410,"k":"줄","e":"line, column, string","s":"저는 줄을 좋아해요."},{"no":411,"k":"줄다","e":"shrink, decrease","s":"저는 줄어요."},{"no":412,"k":"중","e":"medium, during","s":"공부 중이에요."},{"no":413,"k":"중요","e":"importance","s":"저는 중요를 좋아해요."},{"no":414,"k":"중요하다","e":"important","s":"저는 중요해요."},{"no":415,"k":"지나다","e":"pass by","s":"시간이 지나요."},{"no":416,"k":"지다","e":"lose","s":"저는 여요."},{"no":417,"k":"지키다","e":"protect","s":"저는 지여요."},{"no":418,"k":"직접","e":"directly, direct","s":"직접 만든 음식이에요."},{"no":419,"k":"질","e":"quality","s":"저는 질을 좋아해요."},{"no":420,"k":"짜리","e":"a value (won coin)","s":"저는 짜리를 좋아해요."},{"no":421,"k":"짧다","e":"short","s":"치마가 짧아요."},{"no":422,"k":"쪽","e":"side, page","s":"저는 쪽을 좋아해요."},{"no":423,"k":"쯤","e":"about, around ~","s":"저는 쯤을 좋아해요."},{"no":424,"k":"차다","e":"kick","s":"저는 차요."},{"no":425,"k":"차리다","e":"prepare, arrange","s":"저는 차여요."},{"no":426,"k":"참","e":"really, very","s":"참 시간이 있어요."},{"no":427,"k":"찾다","e":"find, visit","s":"열쇠를 찾아요."},{"no":428,"k":"책임","e":"responsibility","s":"저는 책임을 좋아해요."},{"no":429,"k":"천","e":"1000","s":"저는 천을 좋아해요."},{"no":430,"k":"천천히","e":"slowly","s":"천천히 말해 주세요."},{"no":431,"k":"첫","e":"first","s":"저는 첫을 좋아해요."},{"no":432,"k":"첫째","e":"first","s":"저는 첫째를 좋아해요."},{"no":433,"k":"초","e":"~second(s)","s":"저는 초를 좋아해요."},{"no":434,"k":"초대하다","e":"invite","s":"저는 초대해요."},{"no":435,"k":"초록색","e":"green color","s":"저는 초록색을 좋아해요."},{"no":436,"k":"취소하다","e":"cancel","s":"저는 취소해요."},{"no":437,"k":"친구","e":"friend","s":"제 친구가 있어요."},{"no":438,"k":"칠","e":"7","s":"저는 칠을 좋아해요."},{"no":439,"k":"칠십","e":"70","s":"저는 칠십을 좋아해요."},{"no":440,"k":"크기","e":"size","s":"저는 크기를 좋아해요."},{"no":441,"k":"크다","e":"big, large","s":"집이 커요."},{"no":442,"k":"킬로그램","e":"kilogram","s":"저는 킬로그램을 좋아해요."},{"no":443,"k":"킬로미터","e":"kilometer","s":"저는 킬로미터를 좋아해요."},{"no":444,"k":"통","e":"barrel, ~ package(s)","s":"저는 통을 좋아해요."},{"no":445,"k":"통하다","e":"pass, lead","s":"저는 통해요."},{"no":446,"k":"특별히","e":"especially","s":"특별히 시간이 있어요."},{"no":447,"k":"특징","e":"characteristic, feature","s":"저는 특징을 먹어요."},{"no":448,"k":"특히","e":"especially, in particular","s":"저는 특히 음악을 좋아해요."},{"no":449,"k":"틀리다","e":"wrong","s":"답이 틀렸어요."},{"no":450,"k":"파란색","e":"blue color","s":"저는 파란색을 좋아해요."},{"no":451,"k":"파랗다","e":"blue","s":"저는 파랗아요."},{"no":452,"k":"팔","e":"8","s":"저는 팔을 좋아해요."},{"no":453,"k":"팔십","e":"80","s":"저는 팔십을 좋아해요."},{"no":454,"k":"퍼센트","e":"percent","s":"저는 퍼센트를 좋아해요."},{"no":455,"k":"페이지","e":"page","s":"저는 페이지를 좋아해요."},{"no":456,"k":"편","e":"side, episode","s":"편 시간이 있어요."},{"no":457,"k":"편하다","e":"comfortable, easy, convenient","s":"저는 편해요."},{"no":458,"k":"표","e":"table, ticket","s":"저는 표를 좋아해요."},{"no":459,"k":"표현","e":"expression","s":"저는 표현을 좋아해요."},{"no":460,"k":"푹","e":"deeply","s":"저는 푹을 좋아해요."},{"no":461,"k":"풀다","e":"solve","s":"저는 풀어요."},{"no":462,"k":"피우다","e":"smoke, bloom","s":"저는 피워요."},{"no":463,"k":"필요","e":"necessity","s":"도움이 필요해요."},{"no":464,"k":"필요하다","e":"need","s":"저는 필요해요."},{"no":465,"k":"하나","e":"1","s":"저는 하나를 좋아해요."},{"no":466,"k":"하늘색","e":"sky blue, light blue","s":"저는 하늘색을 좋아해요."},{"no":467,"k":"하다","e":"do, say","s":"저는 해요."},{"no":468,"k":"하얀색","e":"white color","s":"저는 하얀색을 좋아해요."},{"no":469,"k":"하얗다","e":"white","s":"저는 하얗아요."},{"no":470,"k":"하지만","e":"but, however","s":"저는 하지만을 좋아해요."},{"no":471,"k":"학","e":"crane","s":"저는 학을 좋아해요."},{"no":472,"k":"한","e":"one, one of the ~","s":"저는 한을 좋아해요."},{"no":473,"k":"한번","e":"once","s":"저는 한번을 좋아해요."},{"no":474,"k":"함께","e":"together","s":"친구와 함께 밥을 먹어요."},{"no":475,"k":"항상","e":"always","s":"저는 항상 아침을 먹어요."},{"no":476,"k":"호","e":"No. ~","s":"201호에 살아요."},{"no":477,"k":"혼자","e":"alone","s":"혼자 공부해요."},{"no":478,"k":"회색","e":"grey","s":"저는 회색을 좋아해요."},{"no":479,"k":"흰색","e":"white color","s":"저는 흰색을 좋아해요."}]}];
+
+// ── TTS ──────────────────────────────────────────────
+let _tb=null;
+function speak(t,b){
+  if(!t||t==='nan')return;
+  if(_tb)_tb.classList.remove('spk');
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang='ko-KR';u.rate=.88;
+  if(b){_tb=b;b.classList.add('spk');}
+  u.onend=()=>{if(_tb)_tb.classList.remove('spk');_tb=null;};
+  speechSynthesis.speak(u);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escq(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+
+// ── Sidebar ───────────────────────────────────────────
+function renderSidebar(){
+  document.getElementById('clist').innerHTML=DATA.map(c=>
+    `<div class="ci" id="ci${c.id}" style="--cc:${c.color}" onclick="showCat(${c.id})">
+      <span class="cn">${String(c.id).padStart(2,'0')}</span>
+      <span class="cl"><div class="cko">${c.ko}</div><div class="cen">${c.en}</div></span>
+      <span class="cnt">${c.words.length}단어</span>
+    </div>`).join('');
+}
+function toggleSB(){document.getElementById('sb').classList.toggle('open');}
+
+// ── State ─────────────────────────────────────────────
+let CC=null;      // current category
+let CM='list';    // current mode
+
+function showCat(id){
+  document.querySelectorAll('.ci').forEach(e=>e.classList.remove('active'));
+  const ci=document.getElementById('ci'+id);
+  if(ci) ci.classList.add('active');
+  document.getElementById('wel').style.display='none';
+  document.getElementById('sv').style.display='none';
+  document.getElementById('cv').style.display='';
+  document.getElementById('srch').value='';
+  CC=DATA.find(x=>x.id===id);
+
+  // Category header
+  document.getElementById('cat-hdr').style.background=CC.color;
+  document.getElementById('cat-hdr').innerHTML=
+    `<div><div class="tko">${CC.ko}</div><div class="ten">${CC.en}</div></div>
+     <div class="wc">${CC.words.length}단어 · ${Math.ceil(CC.words.length/10)} Sets</div>`;
+
+  // Mode button colors
+  document.querySelectorAll('.mbtn').forEach(b=>b.style.background='');
+  document.querySelectorAll('.mbtn.active').forEach(b=>{b.style.background=CC.color;b.style.color='#fff';});
+
+  setMode(CM);
+  if(window.innerWidth<=700) document.getElementById('sb').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+function setMode(m){
+  CM=m;
+  ['list','card','quiz'].forEach(x=>{
+    document.getElementById(x==='list'?'lv':x==='card'?'kv':'qv').style.display=x===m?'':'none';
+    const btn=document.getElementById('mb-'+x);
+    btn.classList.toggle('active',x===m);
+    btn.style.background=x===m&&CC?CC.color:'';
+    btn.style.color=x===m?'#fff':'';
+  });
+  if(m==='list' && CC) renderList();
+  else if(m==='card' && CC) initCard();
+  else if(m==='quiz' && CC) initQuiz();
+}
+
+// ═══════════════════════════════════════════════════════
+// LIST VIEW
+// ═══════════════════════════════════════════════════════
+function renderList(){
+  const c=CC; let html='';
+  for(let s=0;s<c.words.length;s+=10){
+    const sw=c.words.slice(s,s+10);
+    const sn=Math.floor(s/10)+1;
+    const s1=s+1,s2=Math.min(s+10,c.words.length);
+    html+=`<div class="blk">
+      <div class="bh" style="background:${c.color}">
+        <span>Set ${sn} · ${s1}번 ~ ${s2}번</span>
+        <button class="fbt" onclick="openFC(${c.id},${sn-1})">🎴 플래시카드</button>
+      </div>
+      <table class="wt"><thead><tr>
+        <th>No.</th><th>한국어</th><th>English / 예문</th>
+        <th style="width:72px;text-align:center">TTS</th>
+      </tr></thead><tbody>`;
+    sw.forEach((w,i)=>{
+      html+=`<tr>
+        <td style="color:#bbb;font-size:.78rem">${s+i+1}</td>
+        <td><span class="kc">${esc(w.k)}</span></td>
+        <td>
+          <span class="ec">${esc(w.e)}</span>
+          ${w.s?`<div class="sc">${esc(w.s)}</div>`:''}
+        </td>
+        <td style="text-align:center">
+          <button class="tb" onclick="speak('${escq(w.k)}',this)" title="단어 발음">🔊</button>
+          ${w.s?`<button class="tb" onclick="speak('${escq(w.s)}',this)" title="예문 듣기">📢</button>`:''}
+        </td>
+      </tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+  document.getElementById('lv').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// CARD VIEW
+// ═══════════════════════════════════════════════════════
+let KW=[],KI=0,KF=false,KD='ko',KSF=-1; // words, index, flipped, direction, setFilter
+
+function initCard(){
+  KSF=-1; KD='ko'; KI=0; KF=false;
+  applyCardFilter();
+  renderCardUI();
+}
+
+function applyCardFilter(){
+  const words=CC.words;
+  KW = KSF<0 ? [...words] : words.slice(KSF*10, (KSF+1)*10);
+  KI=0; KF=false;
+}
+
+function renderCardUI(){
+  const c=CC, sets=Math.ceil(c.words.length/10);
+
+  // Set filter buttons
+  let sfHtml=`<button class="sfbtn${KSF<0?' active':''}" style="${KSF<0?'background:'+c.color+';color:#fff':''}" onclick="setCardFilter(-1)">전체 (${c.words.length})</button>`;
+  for(let s=0;s<sets;s++){
+    const isA=KSF===s;
+    sfHtml+=`<button class="sfbtn${isA?' active':''}" style="${isA?'background:'+c.color+';color:#fff':''}"
+      onclick="setCardFilter(${s})">Set ${s+1}</button>`;
+  }
+
+  // Direction buttons
+  const dHtml=`<div class="dir-bar">
+    <button class="dbtn${KD==='ko'?' active':''}" onclick="setCardDir('ko')">한 → 영 (Korean front)</button>
+    <button class="dbtn${KD==='en'?' active':''}" onclick="setCardDir('en')">영 → 한 (English front)</button>
+  </div>`;
+
+  document.getElementById('kv').innerHTML=
+    `<div class="sf-bar" id="sf-bar">${sfHtml}</div>`+dHtml+
+    `<div class="pgbar"><div class="pgtrack"><div class="pgfill" id="pgfill" style="background:${c.color}"></div></div>
+      <span class="pgnum" id="pgnum"></span></div>
+    <div class="card-wrap"><div class="card" id="kcard" onclick="cardFlip()">
+      <div class="card-front" id="cfr"></div>
+      <div class="card-back" id="cbk" style="display:none"></div>
+    </div></div>
+    <div class="card-nav">
+      <button class="cnav" onclick="cardNav(-1)">← 이전</button>
+      <button class="cflipbtn" id="cflipbtn" onclick="cardFlip()" style="background:${c.color}">뒤집기</button>
+      <button class="cnav" onclick="cardNav(1)">다음 →</button>
+    </div>`;
+  renderCard();
+}
+
+function setCardFilter(idx){KSF=idx;applyCardFilter();renderCardUI();}
+function setCardDir(d){KD=d;KF=false;renderCardUI();}
+
+function renderCard(){
+  if(!KW.length) return;
+  const w=KW[KI];
+  const pct=KW.length>1?((KI/(KW.length-1))*100).toFixed(1):100;
+  document.getElementById('pgfill').style.width=pct+'%';
+  document.getElementById('pgnum').textContent=`${KI+1} / ${KW.length}`;
+
+  const front = KD==='ko' ? w.k : w.e;
+  const back  = KD==='ko' ? w.e : w.k;
+  const sen   = w.s||'';
+
+  document.getElementById('cfr').innerHTML=
+    `<div class="cf-ko">${esc(front)}</div>
+     <button class="tb spk0" onclick="event.stopPropagation();speak('${escq(front)}',this)">🔊 발음</button>
+     <div class="cf-hint">탭하여 뒤집기 · tap to flip</div>`;
+
+  document.getElementById('cbk').innerHTML=
+    `<div class="cb-en">${esc(back)}</div>`+
+    (sen&&KD==='ko'?`<div class="cb-sen">${esc(sen)}</div>`:'')+
+    `<div class="card-tts-row">
+       <button class="ctts" onclick="event.stopPropagation();speak('${escq(front)}',this)">🔊 ${KD==='ko'?'한국어':'English'}</button>
+       ${sen&&KD==='ko'?`<button class="ctts" onclick="event.stopPropagation();speak('${escq(sen)}',this)">📢 예문</button>`:''}
+     </div>`;
+
+  const fr=document.getElementById('cfr');
+  const bk=document.getElementById('cbk');
+  const btn=document.getElementById('cflipbtn');
+  if(KF){
+    fr.style.display='none'; bk.style.display='';
+    if(btn) btn.textContent='뒤집기 (앞면)';
+    document.getElementById('kcard').style.background='#eef2ff';
+  } else {
+    fr.style.display=''; bk.style.display='none';
+    if(btn) btn.textContent='뒤집기';
+    document.getElementById('kcard').style.background='#fff';
+  }
+}
+
+function cardFlip(){KF=!KF;renderCard();}
+function cardNav(d){
+  KI=Math.max(0,Math.min(KW.length-1,KI+d));
+  KF=false; renderCard();
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZ VIEW
+// ═══════════════════════════════════════════════════════
+let QW=[],QI=0,QS=0,QD='koen',QA=null; // words, index, score, direction, answered
+
+function initQuiz(){
+  QW=shuffle([...CC.words]);
+  QI=0; QS=0; QD='koen'; QA=null;
+  renderQuizUI();
+}
+
+function renderQuizUI(){
+  document.getElementById('qv').innerHTML=
+    `<div class="qhdr">
+      <span class="qscore" id="qscore">문제 1/${QW.length} · 점수 0</span>
+      <button class="qreset" onclick="initQuiz()">↺ 다시 시작</button>
+    </div>
+    <div class="qdir">
+      <button class="qdbtk${QD==='koen'?' active':''}" id="qd-ko" onclick="setQDir('koen')" style="${QD==='koen'?'background:#1a3a5c;color:#fff;border-color:#1a3a5c':'border:2px solid #dde3ef;background:#fff;color:#667'}">한 → 영</button>
+      <button class="qdbtk${QD==='enko'?' active':''}" id="qd-en" onclick="setQDir('enko')" style="${QD==='enko'?'background:#1a3a5c;color:#fff;border-color:#1a3a5c':'border:2px solid #dde3ef;background:#fff;color:#667'};padding:5px 16px;border-radius:16px;font-size:.8rem;font-weight:700;cursor:pointer;margin-left:6px">영 → 한</button>
+    </div>
+    <div class="qprogbar">
+      <div class="pgtrack" style="flex:1"><div class="pgfill" id="qpgfill" style="background:${CC.color};width:0%"></div></div>
+      <span class="pgnum" id="qpgnum">0/${QW.length}</span>
+    </div>
+    <div id="qbody"></div>`;
+  renderQuizQ();
+}
+
+function setQDir(d){QD=d;QI=0;QS=0;QW=shuffle([...CC.words]);renderQuizUI();}
+
+function renderQuizQ(){
+  if(QI>=QW.length){
+    document.getElementById('qbody').innerHTML=
+      `<div class="qcard"><div class="qword">🎉 완료!</div>
+       <div class="qpron">점수: ${QS} / ${QW.length} (${Math.round(QS/QW.length*100)}%)</div></div>
+       <button class="qnext" style="display:block" onclick="initQuiz()">↺ 다시 시작</button>`;
+    return;
+  }
+  const w=QW[QI];
+  const q= QD==='koen' ? w.k : w.e;
+  const correct= QD==='koen' ? w.e : w.k;
+
+  // Pick 3 wrong answers from same category
+  const others=CC.words.filter(x=>x.k!==w.k);
+  const wrong=shuffle([...others]).slice(0,3).map(x=>QD==='koen'?x.e:x.k);
+  const opts=shuffle([correct,...wrong]);
+  const ci=opts.indexOf(correct);
+
+  QA={correct:ci,answered:false};
+
+  const pct=Math.round(QI/QW.length*100);
+  document.getElementById('qpgfill').style.width=pct+'%';
+  document.getElementById('qpgnum').textContent=`${QI}/${QW.length}`;
+  document.getElementById('qscore').textContent=`문제 ${QI+1}/${QW.length} · 점수 ${QS}`;
+
+  document.getElementById('qbody').innerHTML=
+    `<div class="qcard">
+       <div class="qword">${esc(q)}</div>
+       ${w.s&&QD==='koen'?`<button class="tb" onclick="speak('${escq(w.k)}',this)">🔊</button>`:''}
+     </div>
+     <div class="qopts">
+       ${opts.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answerQ(${i},${ci})">${esc(o)}</button>`).join('')}
+     </div>
+     <button class="qnext" id="qnext" onclick="nextQ()">다음 →</button>`;
+}
+
+function answerQ(idx,correct){
+  if(QA.answered) return;
+  QA.answered=true;
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  document.getElementById('opt'+correct).classList.add('correct');
+  if(idx===correct){QS++;}
+  else{document.getElementById('opt'+idx).classList.add('wrong');}
+  document.getElementById('qnext').style.display='block';
+}
+
+function nextQ(){QI++;renderQuizQ();}
+
+// ═══════════════════════════════════════════════════════
+// FLASHCARD MODAL (fixed flip)
+// ═══════════════════════════════════════════════════════
+let FC={words:[],orig:[],i:0,fl:false};
+
+function openFC(cid,si){
+  const c=DATA.find(x=>x.id===cid);
+  FC.orig=[...c.words.slice(si*10,(si+1)*10)];
+  FC.words=[...FC.orig];
+  FC.i=0; FC.fl=false;
+  document.getElementById('fct').textContent=`${c.ko} · Set ${si+1}`;
+  renderFC();
+  document.getElementById('fco').classList.add('on');
+}
+
+function renderFC(){
+  const w=FC.words[FC.i];
+  // Front: Korean only
+  document.getElementById('fcf').textContent=w.k;
+  document.getElementById('fcf').style.display=FC.fl?'none':'';
+  // Back: English + sentence (hidden when not flipped)
+  document.getElementById('fcen').textContent=w.e;
+  document.getElementById('fcen').style.display=FC.fl?'':'none';
+  document.getElementById('fcsen').textContent=w.s||'';
+  document.getElementById('fcsen').style.display=(FC.fl&&w.s)?'':'none';
+  // Hint
+  document.getElementById('fch').style.display=FC.fl?'none':'';
+  document.getElementById('fck').textContent=`${FC.i+1} / ${FC.words.length}`;
+  document.getElementById('fcd').style.background=FC.fl?'#eef2ff':'#f7f9fc';
+}
+
+function fcFlip(){
+  FC.fl=!FC.fl; renderFC();
+  if(FC.fl) speak(FC.words[FC.i].k);
+}
+function fcmv(d){
+  FC.i=Math.max(0,Math.min(FC.words.length-1,FC.i+d));
+  FC.fl=false; renderFC();
+}
+function fcShuffle(){
+  FC.words=shuffle([...FC.orig]);
+  FC.i=0; FC.fl=false; renderFC();
+}
+function fcSpeak(field){
+  const w=FC.words[FC.i];
+  speak(field==='s'?(w.s||w.k):w.k);
+}
+function closeFC(){document.getElementById('fco').classList.remove('on');speechSynthesis.cancel();}
+function fcoOut(e){if(e.target===document.getElementById('fco'))closeFC();}
+
+// ── Utilities ─────────────────────────────────────────
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ── Search ────────────────────────────────────────────
+function doSearch(q){
+  q=q.trim();
+  if(!q){
+    if(CC){document.getElementById('cv').style.display='';
+           document.getElementById('sv').style.display='none';}
+    else{document.getElementById('wel').style.display='';
+         document.getElementById('sv').style.display='none';}
+    return;
+  }
+  document.getElementById('wel').style.display='none';
+  document.getElementById('cv').style.display='none';
+  document.getElementById('sv').style.display='';
+  const ql=q.toLowerCase(),res=[];
+  DATA.forEach(c=>c.words.forEach(w=>{
+    if(w.k.includes(q)||w.e.toLowerCase().includes(ql)||w.s.includes(q))
+      res.push({...w,cko:c.ko,cc:c.color});
+  }));
+  if(!res.length){document.getElementById('so').innerHTML='<p style="color:#aaa;padding:20px">결과 없음</p>';return;}
+  document.getElementById('so').innerHTML=
+    `<p style="color:#aaa;margin-bottom:10px">${res.length}개</p>
+    <div class="blk" style="overflow:hidden">
+    <table class="wt"><thead><tr>
+      <th>카테고리</th><th>한국어</th><th>English / 예문</th>
+      <th style="width:72px;text-align:center">TTS</th>
+    </tr></thead><tbody>`+
+    res.map(r=>`<tr>
+      <td><span class="stag" style="background:${r.cc}">${esc(r.cko)}</span></td>
+      <td class="kc">${esc(r.k)}</td>
+      <td><span class="ec">${esc(r.e)}</span>${r.s?`<div class="sc">${esc(r.s)}</div>`:''}</td>
+      <td style="text-align:center">
+        <button class="tb" onclick="speak('${escq(r.k)}',this)">🔊</button>
+        ${r.s?`<button class="tb" onclick="speak('${escq(r.s)}',this)">📢</button>`:''}
+      </td>
+    </tr>`).join('')+
+    '</tbody></table></div>';
+}
+
+// ── Keyboard ──────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('fco').classList.contains('on')){
+    if(e.key==='ArrowLeft')fcmv(-1);
+    else if(e.key==='ArrowRight')fcmv(1);
+    else if(e.key===' '){e.preventDefault();fcFlip();}
+    else if(e.key==='Escape')closeFC();
+    return;
+  }
+  if(CM==='card'&&CC){
+    if(e.key==='ArrowLeft')cardNav(-1);
+    else if(e.key==='ArrowRight')cardNav(1);
+    else if(e.key===' '){e.preventDefault();cardFlip();}
+  }
+});
+
+renderSidebar();
+</script>
+</body>
+</html>
